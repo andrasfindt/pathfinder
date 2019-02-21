@@ -23,7 +23,8 @@ public class Population {
         this.listener = listener;
         players = new Player[size];
         for (int i = 0; i < size; i++) {
-            Player player = new Player(ObstacleStrategy.BOUNCE);
+//            Player player = new Player(ObstacleStrategy.BOUNCE);
+            Player player = new Player();
             players[i] = player;
 //            if (gen == 1) {
 //                player.setStrategy();
