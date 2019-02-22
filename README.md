@@ -3,7 +3,7 @@
 in terminal of your choice, navigate to project root folder and run 
 ```
 $ mvn clean install
-$ cd mazesolver-ui/
+$ cd pathfinder-ui/
 $ mvn exec:java
 ```
 
