@@ -40,6 +40,6 @@ public class PositiveLongTextFieldValidator implements EventHandler<ActionEvent>
         if (MAX_LONG.compareTo(temp) >= 0) {
             textField.setText(sb);
         }
-        textField.setText("");
+        textField.setText(sb);
     }
 }

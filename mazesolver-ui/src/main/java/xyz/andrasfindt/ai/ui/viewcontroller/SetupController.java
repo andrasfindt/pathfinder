@@ -8,6 +8,7 @@ import xyz.andrasfindt.ai.Game;
 import xyz.andrasfindt.ai.ui.SceneController;
 import xyz.andrasfindt.ai.ui.validators.PositiveDoubleTextFieldValidator;
 import xyz.andrasfindt.ai.ui.validators.PositiveIntegerTextFieldValidator;
+import xyz.andrasfindt.ai.ui.validators.PositiveLongTextFieldValidator;
 
 public class SetupController {
     @FXML
@@ -42,7 +43,7 @@ public class SetupController {
         new PositiveIntegerTextFieldValidator(populationSize);
         new PositiveIntegerTextFieldValidator(width);
         new PositiveIntegerTextFieldValidator(height);
-        new PositiveIntegerTextFieldValidator(randomSeed);
+        new PositiveLongTextFieldValidator(randomSeed);
         new PositiveDoubleTextFieldValidator(mutationRate);
     }
 }
