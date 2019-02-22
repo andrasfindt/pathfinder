@@ -16,6 +16,6 @@ public class BrainTest {
     @Test
     public void testBrain() {
         Brain brain = new Brain(10);
-        Arrays.stream(brain.getDirections()).forEach(System.out::println);
+        Arrays.stream(brain.directions).forEach(System.out::println);
     }
 }

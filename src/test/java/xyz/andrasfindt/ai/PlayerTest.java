@@ -38,7 +38,7 @@ public class PlayerTest {
     public void makeChildShouldResultInIdenticalCopiesOfDirections() throws Exception {
         Player player = new Player();
         Player player1 = player.makeChild();
-        assertArrayEquals(player.getBrain().getDirections(), player1.getBrain().getDirections());
+        assertArrayEquals(player.getBrain().directions, player1.getBrain().directions);
     }
 
     @Test
@@ -47,10 +47,10 @@ public class PlayerTest {
         Game.getObstacles().add(new RectangleObstacle(new Vector2D(0d, 300d), new Vector2D(600d, 310d)));
         Player player = new Player();
         player.setPosition(new Vector2D(300d, 305d));
-        boolean b = player.hasHitObstacle(ObstacleStrategy.DIE_ON_HIT);
+        boolean b = player.hasHitObstacle();
         assertTrue(b);
         player.setPosition(new Vector2D(300d, 320d));
-        b = player.hasHitObstacle(ObstacleStrategy.DIE_ON_HIT);
+        b = player.hasHitObstacle();
         assertFalse(b);
     }
 
