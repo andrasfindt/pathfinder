@@ -7,13 +7,14 @@ import javafx.event.EventHandler;
 import javafx.scene.control.TextField;
 
 import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 
-public class PositiveIntegerTextFieldValidator implements EventHandler<javafx.event.ActionEvent>, ChangeListener<Boolean> {
-    private static final BigInteger MAX_INT = BigInteger.valueOf(Integer.MAX_VALUE);
+public class PositiveLongTextFieldValidator implements EventHandler<ActionEvent>, ChangeListener<Boolean> {
+    public static final BigInteger MAX_LONG = BigInteger.valueOf(Long.MAX_VALUE);
     private TextField textField;
 
-    public PositiveIntegerTextFieldValidator(@NotNull TextField textField) {
+    public PositiveLongTextFieldValidator(@NotNull TextField textField) {
         this.textField = textField;
         this.textField.focusedProperty().addListener(this);
         this.textField.setOnAction(this);
@@ -36,7 +37,7 @@ public class PositiveIntegerTextFieldValidator implements EventHandler<javafx.ev
         String[] split = textField.getText().split("[^\\d+]+");
         String sb = String.join("", split);
         BigInteger temp = new BigInteger(sb);
-        if (MAX_INT.compareTo(temp) >= 0) {
+        if (MAX_LONG.compareTo(temp) >= 0) {
             textField.setText(sb);
         }
         textField.setText("");
