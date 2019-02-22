@@ -67,20 +67,26 @@ public class Player {
                         break;
                     case BOUNCE:
                         velocity = velocity.multiply(-1); // "bounce" off walls
+                        position = position.add(velocity);
                         break;
                     case UNDO:
-                        velocity = velocity.subtract(genome.genes[genome.step]);
-                        position = position.subtract(velocity); //"reverse?"
-                        break;
+                        throw new RuntimeException("not implemented");
+//                        if (genome.step < genome.genomeSize) {
+//                            velocity = velocity.subtract(genome.genes[genome.step]);
+//                            position = position.subtract(velocity); //"reverse?"
+//                        }
+//                        break;
                     case COLLISION_AVOID:
                         //need old position
                         //check if new position would hit an obstacle.
                         //yes, use old position and turn 90?
                         //this shouldn't be happening in here. should be done before collision.
-                        break;
+//                        break;
+                        throw new RuntimeException("not implemented");
                     case SPAWN_NEW:
                         //on death, spawn new child with same genome up to and excluding the collision
-                        break;
+                        throw new RuntimeException("not implemented");
+//                        break;
                 }
             }
         }
