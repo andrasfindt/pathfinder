@@ -7,7 +7,7 @@ import static java.lang.Math.PI;
 
 class Brain {
     private static final double PI_2 = PI * 2d;
-    private Vector2D[] directions;
+    Vector2D[] directions;
     int step;
     int brainSize;
 
@@ -42,9 +42,5 @@ class Brain {
 
     private void assignRandomDirection(int i) {
         directions[i] = Vector2D.fromAngle(RandomUtil.nextDouble(PI_2));
-    }
-
-    public Vector2D[] getDirections() {
-        return directions;
     }
 }

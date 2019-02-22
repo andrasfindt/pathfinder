@@ -47,10 +47,10 @@ public class PlayerTest {
         Game.getObstacles().add(new RectangleObstacle(new Vector2D(0d, 300d), new Vector2D(600d, 310d)));
         Player player = new Player();
         player.setPosition(new Vector2D(300d, 305d));
-        boolean b = player.hasHitObstacle();
+        boolean b = player.hasHitObstacle(ObstacleStrategy.DIE_ON_HIT);
         assertTrue(b);
         player.setPosition(new Vector2D(300d, 320d));
-        b = player.hasHitObstacle();
+        b = player.hasHitObstacle(ObstacleStrategy.DIE_ON_HIT);
         assertFalse(b);
     }
 

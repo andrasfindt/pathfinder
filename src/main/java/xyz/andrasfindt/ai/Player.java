@@ -40,7 +40,7 @@ public class Player {
 
     void move() {
         if (brain.brainSize > brain.step) {
-            acceleration = brain.getDirections()[brain.step];
+            acceleration = brain.directions[brain.step];
             brain.step++;
         } else {
             dead = true;
@@ -64,7 +64,8 @@ public class Player {
                     case BOUNCE:
                         velocity = velocity.multiply(-1); // "bounce" off walls
                         break;
-                    case REVERSE:
+                    case UNDO:
+                        velocity = velocity.subtract(brain.directions[brain.step]);
                         position = position.subtract(velocity); //"reverse?"
                         break;
                     case COLLISION_AVOID:

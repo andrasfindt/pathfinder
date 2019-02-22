@@ -3,7 +3,7 @@ package xyz.andrasfindt.ai;
 public enum ObstacleStrategy {
     DIE_ON_HIT,
     BOUNCE,
-    REVERSE,
+    UNDO,
     COLLISION_AVOID,
     SPAWN_NEW
 }
