@@ -29,17 +29,17 @@ public class SetupController {
 
     @FXML
     private void handleButtonAction(ActionEvent event) {
-        Game.POPULATION_SIZE = Integer.valueOf(populationSize.getText());
-        Game.MUTATION_RATE = Double.valueOf(mutationRate.getText());
-        Game.RANDOM_SEED = Long.valueOf(randomSeed.getText());
+        Game.Setup.POPULATION_SIZE = Integer.valueOf(populationSize.getText());
+        Game.Setup.MUTATION_RATE = Double.valueOf(mutationRate.getText());
+        Game.Setup.RANDOM_SEED = Long.valueOf(randomSeed.getText());
         SceneController.setScene("editMaze");
     }
 
     public void initialize() {
         populationSizeLabel.setText("PopulationSize");
-        populationSize.setText(String.valueOf(Game.POPULATION_SIZE));
-        mutationRate.setText(String.valueOf(Game.MUTATION_RATE));
-        randomSeed.setText(String.valueOf(Game.RANDOM_SEED));
+        populationSize.setText(String.valueOf(Game.Setup.POPULATION_SIZE));
+        mutationRate.setText(String.valueOf(Game.Setup.MUTATION_RATE));
+        randomSeed.setText(String.valueOf(Game.Setup.RANDOM_SEED));
         new PositiveIntegerTextFieldValidator(populationSize);
         new PositiveIntegerTextFieldValidator(width);
         new PositiveIntegerTextFieldValidator(height);

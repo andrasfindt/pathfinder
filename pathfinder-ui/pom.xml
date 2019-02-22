@@ -3,24 +3,19 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>xyz.andrasfindt.ai</groupId>
+        <artifactId>pathfinder</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
 
-    <groupId>xyz.andrasfindt.ai</groupId>
-    <artifactId>mazesolver-ui</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <artifactId>pathfinder-ui</artifactId>
     <packaging>jar</packaging>
+
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
         <mainClass>xyz.andrasfindt.ai.Main</mainClass>
-        <mockito-core.version>2.23.4</mockito-core.version>
-        <validation-api.version>2.0.1.Final</validation-api.version>
-        <junit.version>4.12</junit.version>
-        <genetic-algorithm-tutorial.version>1.0-SNAPSHOT</genetic-algorithm-tutorial.version>
-        <javafx-swing.version>11.0.2</javafx-swing.version>
         <maven-compiler-plugin.version>3.8.0</maven-compiler-plugin.version>
         <exec-maven-plugin.version>1.6.0</exec-maven-plugin.version>
-        <testfx-junit.version>4.0.15-alpha</testfx-junit.version>
     </properties>
     <dependencies>
         <dependency>
@@ -40,8 +35,8 @@
         </dependency>
         <dependency>
             <groupId>xyz.andrasfindt.ai</groupId>
-            <artifactId>genetic-algorithm-tutorial</artifactId>
-            <version>${genetic-algorithm-tutorial.version}</version>
+            <artifactId>pathfinder-core</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>javax.validation</groupId>

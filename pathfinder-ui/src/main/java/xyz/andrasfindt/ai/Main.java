@@ -23,7 +23,7 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         SceneController.init(stage);
-        stage.setTitle("Solve thingle.");
+        stage.setTitle("Project Pathfinder");
 
         Scene scene = SceneController.makeScene("setup", "setup.fxml");
         SceneController.makeScene("editMaze", "maze_editor.fxml");

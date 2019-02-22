@@ -27,7 +27,7 @@ public class MazeEditorController {
 
     @FXML
     private void export(ActionEvent actionEvent) {
-        WritableImage wim = new WritableImage(Game.SCREEN_WIDTH, Game.SCREEN_HEIGHT);
+        WritableImage wim = new WritableImage(Game.Setup.SCREEN_WIDTH, Game.Setup.SCREEN_HEIGHT);
 
         File file = new File("CanvasImage.png");
 
@@ -100,7 +100,7 @@ public class MazeEditorController {
 
     @FXML
     public void use(ActionEvent actionEvent) {
-        WritableImage wim = new WritableImage(Game.SCREEN_WIDTH, Game.SCREEN_HEIGHT);
+        WritableImage wim = new WritableImage(Game.Setup.SCREEN_WIDTH, Game.Setup.SCREEN_HEIGHT);
         canvas.snapshot(snapshotResult -> {
             byte[][] image = getImage(snapshotResult.getImage());
             Game.setExclusiveImageObstacle(new ImageObstacle(image));
@@ -112,10 +112,10 @@ public class MazeEditorController {
 
     private byte[][] getImage(WritableImage image) {
         BufferedImage bufferedImage = SwingFXUtils.fromFXImage(image, null);
-        byte[][] imageBytes = new byte[Game.SCREEN_HEIGHT][];
-        for (int x = 0; x < Game.SCREEN_HEIGHT; x++) {
-            imageBytes[x] = new byte[Game.SCREEN_WIDTH];
-            for (int y = 0; y < Game.SCREEN_WIDTH; y++) {
+        byte[][] imageBytes = new byte[Game.Setup.SCREEN_HEIGHT][];
+        for (int x = 0; x < Game.Setup.SCREEN_HEIGHT; x++) {
+            imageBytes[x] = new byte[Game.Setup.SCREEN_WIDTH];
+            for (int y = 0; y < Game.Setup.SCREEN_WIDTH; y++) {
                 int pixel = bufferedImage.getRGB(x, y);
 
                 int red = ((pixel >> 16) & 0xff);
@@ -131,7 +131,7 @@ public class MazeEditorController {
 
     @FXML
     public void clear(ActionEvent actionEvent) {
-        graphicsContext.clearRect(0, 0, Game.SCREEN_WIDTH, Game.SCREEN_HEIGHT);
+        graphicsContext.clearRect(0, 0, Game.Setup.SCREEN_WIDTH, Game.Setup.SCREEN_HEIGHT);
         initDraw();
     }
 }

@@ -24,7 +24,7 @@ import java.util.List;
 
 public class MazeGameController implements Listener {
     public static final Color DEFAULT = Color.BLUEVIOLET;
-    public static final double SCALE = Game.goal.distance(0, Game.SCREEN_HEIGHT);
+    public static final double SCALE = Game.Setup.goal.distance(0, Game.Setup.SCREEN_HEIGHT);
     @FXML
     public CheckBox solved;
     @FXML
@@ -61,10 +61,10 @@ public class MazeGameController implements Listener {
         solved.setSelected(false);
         stepsTaken.setText("1000");
         generation.setText("1");
-        popSize.setText(String.valueOf(Game.POPULATION_SIZE));
-        speed.setText(String.valueOf(Game.SPEED_LIMIT));
+        popSize.setText(String.valueOf(Game.Setup.POPULATION_SIZE));
+        speed.setText(String.valueOf(Game.Setup.SPEED_LIMIT));
         maxFitness.setText("---");
-        mutationRate.setText(String.format("%f%%", Game.MUTATION_RATE * 100d));
+        mutationRate.setText(String.format("%f%%", Game.Setup.MUTATION_RATE * 100d));
 
         dotGame = new DotGame(this);
         graphicsContext.clearRect(0, 0, canvasWidth, canvasHeight);
@@ -90,13 +90,13 @@ public class MazeGameController implements Listener {
             for (int x = 0; x < image.length; x++) {
                 int lengthY = image[x].length;
                 for (int y = 0; y < lengthY; y++) {
-                    pixelWriter.setColor(x, y, image[x][y] <= Game.COLLISION_THRESHOLD ? Color.BLACK : Color.WHITE);
+                    pixelWriter.setColor(x, y, image[x][y] <= Game.Setup.COLLISION_THRESHOLD ? Color.BLACK : Color.WHITE);
                 }
             }
         }
         graphicsContext2D.setStroke(Color.RED);
         graphicsContext2D.setFill(Color.RED);
-        graphicsContext2D.fillOval(Game.goal.x - 3d, Game.goal.y - 3d, 6d, 6d);
+        graphicsContext2D.fillOval(Game.Setup.goal.x - 3d, Game.Setup.goal.y - 3d, 6d, 6d);
     }
 
     private void initDraw() {

@@ -4,5 +4,10 @@ in terminal of your choice, navigate to project root folder and run
 ```
 $ mvn clean install
 $ cd mazesolver-ui/
-$ mvn clean compile exec:java
+$ mvn exec:java
+```
+
+or run 
+```
+$ ./run.sh
 ```
