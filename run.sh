@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-mvn clean install && cd mazesolver-ui/ && mvn exec:java
+mvn clean install && cd pathfinder-ui/ && mvn exec:java
