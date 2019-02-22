@@ -6,10 +6,8 @@ import xyz.andrasfindt.ai.geom.Vector2D;
 import xyz.andrasfindt.ai.obstacles.Obstacle;
 import xyz.andrasfindt.ai.obstacles.ObstacleStrategy;
 
-import static xyz.andrasfindt.ai.Game.goal;
-
 public class Player {
-    private Vector2D position = new Vector2D(Game.SCREEN_WIDTH / 2d, Game.SCREEN_HEIGHT - 10d);
+    private Vector2D position = new Vector2D(Game.Setup.SCREEN_WIDTH / 2d, Game.Setup.SCREEN_HEIGHT - 10d);
     private Vector2D velocity = Vector2D.ZERO;
     private Vector2D acceleration = Vector2D.ZERO;
 
@@ -52,7 +50,7 @@ public class Player {
             dead = true;
         }
         velocity = velocity.add(acceleration);
-        velocity = velocity.limit(Game.SPEED_LIMIT);
+        velocity = velocity.limit(Game.Setup.SPEED_LIMIT);
         position = position.add(velocity);
 
     }
@@ -60,7 +58,7 @@ public class Player {
     void update() {
         if (!dead && !reachedGoal) {
             move();
-            if (Vector2D.DoubleUtil.distance(position.x, position.y, goal.x, goal.y) < 5d) {//if reached goal
+            if (Vector2D.DoubleUtil.distance(position.x, position.y, Game.Setup.goal.x, Game.Setup.goal.y) < 5d) {//if reached goal
                 reachedGoal = true;
             } else if (isOutOfBounds() || hasHitObstacle()) {
                 switch (strategy) {
@@ -90,9 +88,9 @@ public class Player {
 
     private boolean isOutOfBounds() {
         return position.x < 0 ||
-                position.x > Game.screenSize.x ||
+                position.x > Game.Setup.screenSize.x ||
                 position.y < 0 ||
-                position.y > Game.screenSize.y;
+                position.y > Game.Setup.screenSize.y;
     }
 
     boolean hasHitObstacle() {
@@ -110,7 +108,7 @@ public class Player {
         if (reachedGoal) {
             fitness = 1d / 16d + 10000d / (genome.step * genome.step);
         } else {
-            double d = Vector2D.DoubleUtil.distance(position.x, position.y, goal.x, goal.y);
+            double d = Vector2D.DoubleUtil.distance(position.x, position.y, Game.Setup.goal.x, Game.Setup.goal.y);
             fitness = 1d / (d * d);
         }
     }

@@ -40,7 +40,7 @@ class Genome {
     }
 
     void mutate() {
-        IntStream.range(0, genes.length).filter(i -> RandomUtil.nextDouble() < Game.MUTATION_RATE).forEach(this::assignRandomDirection);
+        IntStream.range(0, genes.length).filter(i -> RandomUtil.nextDouble() < Game.Setup.MUTATION_RATE).forEach(this::assignRandomDirection);
     }
 
     private void assignRandomDirection(int i) {

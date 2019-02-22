@@ -8,7 +8,7 @@ public class DotGame {
     private Listener listener;
 
     public DotGame(Listener listener) {
-        this.population = new Population(Game.POPULATION_SIZE, listener);
+        this.population = new Population(Game.Setup.POPULATION_SIZE, listener);
         this.listener = listener;
     }
 
@@ -25,16 +25,16 @@ public class DotGame {
     }
 
     public void increaseSpeed() {
-        Game.SPEED_LIMIT += 0.01;
-        if (Game.SPEED_LIMIT > 5) {
-            Game.SPEED_LIMIT = 5;
+        Game.Setup.SPEED_LIMIT += 0.01;
+        if (Game.Setup.SPEED_LIMIT > 5) {
+            Game.Setup.SPEED_LIMIT = 5;
         }
     }
 
     public void decreaseSpeed() {
-        Game.SPEED_LIMIT -= 0.01;
-        if (Game.SPEED_LIMIT < 0) {
-            Game.SPEED_LIMIT = 0;
+        Game.Setup.SPEED_LIMIT -= 0.01;
+        if (Game.Setup.SPEED_LIMIT < 0) {
+            Game.Setup.SPEED_LIMIT = 0;
         }
     }
 

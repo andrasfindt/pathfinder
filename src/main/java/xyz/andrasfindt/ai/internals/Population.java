@@ -23,7 +23,7 @@ public class Population {
     private Player oldBestPlayer;
 
     public Population(int size, Listener listener) {
-        RandomUtil.setRandomSeed(Game.RANDOM_SEED);
+        RandomUtil.setRandomSeed(Game.Setup.RANDOM_SEED);
         this.listener = listener;
         players = new Player[size];
         for (int i = 0; i < size; i++) {
@@ -120,7 +120,7 @@ public class Population {
         if (players[bestPlayer].hasReachedGoal()) {
             minStep = players[bestPlayer].getGenome().step;
         }
-        System.out.printf("%s gen: %d max: %s step: %d max_speed: %f\n", players[bestPlayer].hasReachedGoal() ? "*" : " ", gen, max, players[bestPlayer].getGenome().step, Game.SPEED_LIMIT);
+        System.out.printf("%s gen: %d max: %s step: %d max_speed: %f\n", players[bestPlayer].hasReachedGoal() ? "*" : " ", gen, max, players[bestPlayer].getGenome().step, Game.Setup.SPEED_LIMIT);
     }
 
 

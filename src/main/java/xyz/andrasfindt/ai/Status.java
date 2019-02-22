@@ -18,9 +18,9 @@ public class Status {
         stepsTaken = bestPlayer.getStepCount();
         currentGeneration = population.getCurrentGeneration();
         aliveCount = population.getAliveCount();
-        speed = Game.SPEED_LIMIT;
+        speed = Game.Setup.SPEED_LIMIT;
         maxFitness = bestPlayer.getFitness();
-        mutationRate = Game.MUTATION_RATE;
+        mutationRate = Game.Setup.MUTATION_RATE;
     }
 
     public boolean isSolved() {

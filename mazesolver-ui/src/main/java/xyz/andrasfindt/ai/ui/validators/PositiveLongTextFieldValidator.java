@@ -7,7 +7,6 @@ import javafx.event.EventHandler;
 import javafx.scene.control.TextField;
 
 import javax.validation.constraints.NotNull;
-import java.math.BigDecimal;
 import java.math.BigInteger;
 
 public class PositiveLongTextFieldValidator implements EventHandler<ActionEvent>, ChangeListener<Boolean> {

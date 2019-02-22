@@ -24,7 +24,6 @@ public class SceneController {
         instance.primaryStage = primaryStage;
     }
 
-
     public static void setScene(String id) {
         setScene(instance.scenes.get(id));
     }

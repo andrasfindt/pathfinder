@@ -1,7 +1,6 @@
 package xyz.andrasfindt.ai.geom;
 
 import org.junit.Test;
-import xyz.andrasfindt.ai.geom.Vector2D;
 
 import static junit.framework.TestCase.assertEquals;
 

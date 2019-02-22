@@ -7,8 +7,8 @@ import xyz.andrasfindt.ai.geom.Vector2D;
 import javax.validation.constraints.NotNull;
 
 public class ImageObstacle extends Obstacle {
-    public static final int W_MAX = Game.SCREEN_WIDTH - 1;
-    public static final int H_MAX = Game.SCREEN_HEIGHT - 1;
+    public static final int W_MAX = Game.Setup.SCREEN_WIDTH - 1;
+    public static final int H_MAX = Game.Setup.SCREEN_HEIGHT - 1;
     private byte[][] image;
 
     public ImageObstacle(byte[][] image) {
@@ -17,7 +17,7 @@ public class ImageObstacle extends Obstacle {
 
     @Override
     public boolean hit(@NotNull Vector2D position) {
-        return getPixelAt(position) <= Game.COLLISION_THRESHOLD;
+        return getPixelAt(position) <= Game.Setup.COLLISION_THRESHOLD;
     }
 
     private byte getPixelAt(Vector2D position) {

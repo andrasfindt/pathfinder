@@ -1,11 +1,8 @@
 package xyz.andrasfindt.ai.internals;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import xyz.andrasfindt.ai.Game;
-import xyz.andrasfindt.ai.internals.Player;
-import xyz.andrasfindt.ai.internals.RandomUtil;
 import xyz.andrasfindt.ai.geom.Vector2D;
 import xyz.andrasfindt.ai.obstacles.RectangleObstacle;
 
@@ -17,7 +14,7 @@ public class PlayerTest {
 
     @Before
     public void setUp() throws Exception {
-        Game.RANDOM_SEED = 0;
+        Game.Setup.RANDOM_SEED = 0;
         RandomUtil.setRandomSeed(0);
     }
 
@@ -71,7 +68,7 @@ public class PlayerTest {
     @Test
     public void hasReachedGoalFromUpdate() {
         Player player = new Player();
-        player.setPosition(Game.goal);
+        player.setPosition(Game.Setup.goal);
         player.update();
         assertTrue(player.hasReachedGoal());
     }
