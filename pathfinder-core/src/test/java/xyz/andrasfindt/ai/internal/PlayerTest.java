@@ -1,10 +1,10 @@
-package xyz.andrasfindt.ai.internals;
+package xyz.andrasfindt.ai.internal;
 
 import org.junit.Before;
 import org.junit.Test;
 import xyz.andrasfindt.ai.Game;
 import xyz.andrasfindt.ai.geom.Vector2D;
-import xyz.andrasfindt.ai.obstacles.RectangleObstacle;
+import xyz.andrasfindt.ai.obstacle.RectangleObstacle;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertFalse;

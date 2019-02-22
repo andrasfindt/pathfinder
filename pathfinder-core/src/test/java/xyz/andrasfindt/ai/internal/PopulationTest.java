@@ -1,4 +1,4 @@
-package xyz.andrasfindt.ai.internals;
+package xyz.andrasfindt.ai.internal;
 
 import org.junit.Test;
 import xyz.andrasfindt.ai.Listener;

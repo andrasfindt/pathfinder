@@ -1,10 +1,10 @@
-package xyz.andrasfindt.ai.internals;
+package xyz.andrasfindt.ai.internal;
 
 import xyz.andrasfindt.ai.Game;
 import xyz.andrasfindt.ai.Listener;
 import xyz.andrasfindt.ai.geom.Vector2D;
-import xyz.andrasfindt.ai.obstacles.Obstacle;
-import xyz.andrasfindt.ai.obstacles.ObstacleStrategy;
+import xyz.andrasfindt.ai.obstacle.Obstacle;
+import xyz.andrasfindt.ai.obstacle.ObstacleStrategy;
 
 public class Player {
     private Vector2D position = new Vector2D(Game.Setup.SCREEN_WIDTH / 2d, Game.Setup.SCREEN_HEIGHT - 10d);

@@ -1,4 +1,4 @@
-package xyz.andrasfindt.ai.obstacles;
+package xyz.andrasfindt.ai.obstacle;
 
 import xyz.andrasfindt.ai.geom.Vector2D;
 

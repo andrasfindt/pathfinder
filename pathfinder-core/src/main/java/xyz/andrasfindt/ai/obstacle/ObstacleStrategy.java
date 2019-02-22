@@ -1,4 +1,4 @@
-package xyz.andrasfindt.ai.obstacles;
+package xyz.andrasfindt.ai.obstacle;
 
 public enum ObstacleStrategy {
     DIE_ON_HIT,

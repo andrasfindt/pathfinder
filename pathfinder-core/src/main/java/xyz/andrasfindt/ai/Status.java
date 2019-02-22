@@ -1,7 +1,7 @@
 package xyz.andrasfindt.ai;
 
-import xyz.andrasfindt.ai.internals.Player;
-import xyz.andrasfindt.ai.internals.Population;
+import xyz.andrasfindt.ai.internal.Player;
+import xyz.andrasfindt.ai.internal.Population;
 
 public class Status {
     private boolean solved;

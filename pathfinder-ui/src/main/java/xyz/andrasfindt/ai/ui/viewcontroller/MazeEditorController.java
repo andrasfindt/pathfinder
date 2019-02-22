@@ -8,19 +8,26 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import xyz.andrasfindt.ai.Game;
-import xyz.andrasfindt.ai.obstacles.ImageObstacle;
+import xyz.andrasfindt.ai.geom.Vector2D;
+import xyz.andrasfindt.ai.obstacle.ImageObstacle;
 import xyz.andrasfindt.ai.ui.SceneController;
+import xyz.andrasfindt.ai.ui.drawing.DrawingEvent;
+import xyz.andrasfindt.ai.ui.drawing.DrawingHandler;
+import xyz.andrasfindt.ai.ui.drawing.DrawingListener;
+import xyz.andrasfindt.ai.ui.drawing.DrawingViewWrapper;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
-public class MazeEditorController {
+public class MazeEditorController implements DrawingListener {
 
+    List<Vector2D> mouseEvent = new ArrayList<>();
     @FXML
     private Canvas canvas;
     private GraphicsContext graphicsContext;
@@ -46,21 +53,7 @@ public class MazeEditorController {
 
         initDraw();
 
-        canvas.addEventHandler(MouseEvent.MOUSE_PRESSED,
-                event -> {
-                    graphicsContext.beginPath();
-                    graphicsContext.moveTo(event.getX(), event.getY());
-                    graphicsContext.stroke();
-                });
-
-        canvas.addEventHandler(MouseEvent.MOUSE_DRAGGED,
-                event -> {
-                    graphicsContext.lineTo(event.getX(), event.getY());
-                    graphicsContext.stroke();
-                });
-
-        canvas.addEventHandler(MouseEvent.MOUSE_RELEASED, event -> {
-        });
+        new DrawingHandler(this);
 
     }
 
@@ -68,14 +61,14 @@ public class MazeEditorController {
         double canvasWidth = graphicsContext.getCanvas().getWidth();
         double canvasHeight = graphicsContext.getCanvas().getHeight();
 
-        graphicsContext.setFill(Color.LIGHTGRAY);
+        graphicsContext.setFill(Color.WHITE);
         graphicsContext.setStroke(Color.BLACK);
         graphicsContext.setLineWidth(1);
 
         graphicsContext.fill();
         graphicsContext.strokeRect(0, 0, canvasWidth, canvasHeight);
 
-        graphicsContext.setFill(Color.LIGHTGRAY);
+        graphicsContext.setFill(Color.WHITE);
         graphicsContext.setStroke(Color.BLACK);
         graphicsContext.setLineWidth(10);
     }
@@ -102,19 +95,18 @@ public class MazeEditorController {
     public void use(ActionEvent actionEvent) {
         WritableImage wim = new WritableImage(Game.Setup.SCREEN_WIDTH, Game.Setup.SCREEN_HEIGHT);
         canvas.snapshot(snapshotResult -> {
-            byte[][] image = getImage(snapshotResult.getImage());
+            Byte[][] image = getImage(snapshotResult.getImage());
             Game.setExclusiveImageObstacle(new ImageObstacle(image));
-            SceneController.makeScene("gameMaze", "maze_game.fxml");
-            SceneController.setScene("gameMaze");
+            SceneController.setScene(SceneController.makeScene("gameMaze", "maze_game.fxml"));
             return null;
         }, null, wim);
     }
 
-    private byte[][] getImage(WritableImage image) {
+    private Byte[][] getImage(WritableImage image) {
         BufferedImage bufferedImage = SwingFXUtils.fromFXImage(image, null);
-        byte[][] imageBytes = new byte[Game.Setup.SCREEN_HEIGHT][];
+        Byte[][] imageBytes = new Byte[Game.Setup.SCREEN_HEIGHT][];
         for (int x = 0; x < Game.Setup.SCREEN_HEIGHT; x++) {
-            imageBytes[x] = new byte[Game.Setup.SCREEN_WIDTH];
+            imageBytes[x] = new Byte[Game.Setup.SCREEN_WIDTH];
             for (int y = 0; y < Game.Setup.SCREEN_WIDTH; y++) {
                 int pixel = bufferedImage.getRGB(x, y);
 
@@ -133,5 +125,36 @@ public class MazeEditorController {
     public void clear(ActionEvent actionEvent) {
         graphicsContext.clearRect(0, 0, Game.Setup.SCREEN_WIDTH, Game.Setup.SCREEN_HEIGHT);
         initDraw();
+    }
+
+    @Override
+    public DrawingViewWrapper getView() {
+        return new DrawingViewWrapper(canvas);
+    }
+
+    @Override
+    public void startDraw(Vector2D point) {
+        graphicsContext.beginPath();
+        graphicsContext.moveTo(point.x, point.y);
+        graphicsContext.stroke();
+
+    }
+
+    @Override
+    public void drawPath(Vector2D point) {
+        graphicsContext.lineTo(point.x, point.y);
+        graphicsContext.stroke();
+    }
+
+    @Override
+    public void complete(DrawingEvent mouseEvent) {
+        if (mouseEvent.isClickEvent()) {
+            Vector2D location = mouseEvent.getHead();
+            graphicsContext.setFill(Color.BLACK);
+            graphicsContext.fillRect(location.x - 5d, location.y - 5d, 10d, 10d);
+            graphicsContext.setFill(Color.WHITE);
+        } else {
+            graphicsContext.closePath();
+        }
     }
 }

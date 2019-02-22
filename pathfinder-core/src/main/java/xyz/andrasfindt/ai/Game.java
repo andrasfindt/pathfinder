@@ -1,9 +1,9 @@
 package xyz.andrasfindt.ai;
 
 import xyz.andrasfindt.ai.geom.Vector2D;
-import xyz.andrasfindt.ai.internals.Population;
-import xyz.andrasfindt.ai.obstacles.ImageObstacle;
-import xyz.andrasfindt.ai.obstacles.Obstacle;
+import xyz.andrasfindt.ai.internal.Population;
+import xyz.andrasfindt.ai.obstacle.ImageObstacle;
+import xyz.andrasfindt.ai.obstacle.Obstacle;
 
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;

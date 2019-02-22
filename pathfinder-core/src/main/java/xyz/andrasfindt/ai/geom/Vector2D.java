@@ -1,5 +1,7 @@
 package xyz.andrasfindt.ai.geom;
 
+import java.util.Objects;
+
 public class Vector2D {
 
     public static final Vector2D ZERO = new Vector2D(0d, 0d);
@@ -90,6 +92,11 @@ public class Vector2D {
         }
         Vector2D v = (Vector2D) obj;
         return x == v.x && y == v.y;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y);
     }
 
     public static class DoubleUtil {

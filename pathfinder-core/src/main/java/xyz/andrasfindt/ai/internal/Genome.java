@@ -1,4 +1,4 @@
-package xyz.andrasfindt.ai.internals;
+package xyz.andrasfindt.ai.internal;
 
 import xyz.andrasfindt.ai.Game;
 import xyz.andrasfindt.ai.geom.Vector2D;

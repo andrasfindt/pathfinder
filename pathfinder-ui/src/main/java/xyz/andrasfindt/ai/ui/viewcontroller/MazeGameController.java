@@ -16,11 +16,9 @@ import xyz.andrasfindt.ai.Game;
 import xyz.andrasfindt.ai.Listener;
 import xyz.andrasfindt.ai.Status;
 import xyz.andrasfindt.ai.geom.Vector2D;
-import xyz.andrasfindt.ai.obstacles.ImageObstacle;
+import xyz.andrasfindt.ai.obstacle.ImageObstacle;
 
 import java.util.List;
-
-//import xyz.andrasfindt.ai.internals.Player;
 
 public class MazeGameController implements Listener {
     public static final Color DEFAULT = Color.BLUEVIOLET;
@@ -86,7 +84,7 @@ public class MazeGameController implements Listener {
         GraphicsContext graphicsContext2D = gameCanvasBackground.getGraphicsContext2D();
         PixelWriter pixelWriter = graphicsContext2D.getPixelWriter();
         for (ImageObstacle imageObstacle : imageObstacles) {
-            byte[][] image = imageObstacle.getImage();
+            Byte[][] image = imageObstacle.getImage();
             for (int x = 0; x < image.length; x++) {
                 int lengthY = image[x].length;
                 for (int y = 0; y < lengthY; y++) {
