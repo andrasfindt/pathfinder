@@ -39,6 +39,7 @@ public class PositiveIntegerTextFieldValidator implements EventHandler<javafx.ev
             BigInteger temp = new BigInteger(sb);
             if (MAX_INT.compareTo(temp) >= 0) {
                 textField.setText(sb);
+                return;
             }
         }
         textField.setText(MAX_INT.toString());

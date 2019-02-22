@@ -40,6 +40,7 @@ public class PositiveLongTextFieldValidator implements EventHandler<ActionEvent>
             BigInteger temp = new BigInteger(sb);
             if (MAX_LONG.compareTo(temp) >= 0) {
                 textField.setText(sb);
+                return;
             }
         }
         textField.setText(MAX_LONG.toString());
