@@ -1,6 +1,10 @@
-package xyz.andrasfindt.ai;
+package xyz.andrasfindt.ai.internals;
 
 import org.junit.Test;
+import xyz.andrasfindt.ai.Listener;
+import xyz.andrasfindt.ai.Status;
+import xyz.andrasfindt.ai.internals.Population;
+import xyz.andrasfindt.ai.geom.Vector2D;
 
 import java.util.Arrays;
 
@@ -22,7 +26,7 @@ public class PopulationTest {
             }
 
             @Override
-            public void updateStats(Player BestDot) {
+            public void updateStats(Status BestDot) {
 
             }
         });

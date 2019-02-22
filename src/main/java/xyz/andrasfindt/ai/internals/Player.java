@@ -1,4 +1,10 @@
-package xyz.andrasfindt.ai;
+package xyz.andrasfindt.ai.internals;
+
+import xyz.andrasfindt.ai.Game;
+import xyz.andrasfindt.ai.Listener;
+import xyz.andrasfindt.ai.geom.Vector2D;
+import xyz.andrasfindt.ai.obstacles.Obstacle;
+import xyz.andrasfindt.ai.obstacles.ObstacleStrategy;
 
 import static xyz.andrasfindt.ai.Game.goal;
 
@@ -7,7 +13,7 @@ public class Player {
     private Vector2D velocity = Vector2D.ZERO;
     private Vector2D acceleration = Vector2D.ZERO;
 
-    private Brain brain;
+    private Genome genome;
 
     private boolean dead = false;
     private boolean reachedGoal = false;
@@ -18,10 +24,10 @@ public class Player {
     private ObstacleStrategy strategy = ObstacleStrategy.DIE_ON_HIT;
 
     Player() {
-        brain = new Brain(1000);
+        genome = new Genome(1000);
     }
 
-    public Player(ObstacleStrategy strategy) {
+    Player(ObstacleStrategy strategy) {
         this();
         this.strategy = strategy;
     }
@@ -39,9 +45,9 @@ public class Player {
     }
 
     void move() {
-        if (brain.brainSize > brain.step) {
-            acceleration = brain.directions[brain.step];
-            brain.step++;
+        if (genome.genomeSize > genome.step) {
+            acceleration = genome.genes[genome.step];
+            genome.step++;
         } else {
             dead = true;
         }
@@ -65,7 +71,7 @@ public class Player {
                         velocity = velocity.multiply(-1); // "bounce" off walls
                         break;
                     case UNDO:
-                        velocity = velocity.subtract(brain.directions[brain.step]);
+                        velocity = velocity.subtract(genome.genes[genome.step]);
                         position = position.subtract(velocity); //"reverse?"
                         break;
                     case COLLISION_AVOID:
@@ -75,7 +81,7 @@ public class Player {
                         //this shouldn't be happening in here. should be done before collision.
                         break;
                     case SPAWN_NEW:
-                        //on death, spawn new child with same brain up to and excluding the collision
+                        //on death, spawn new child with same genome up to and excluding the collision
                         break;
                 }
             }
@@ -102,7 +108,7 @@ public class Player {
 
     void calculateFitness() {
         if (reachedGoal) {
-            fitness = 1d / 16d + 10000d / (brain.step * brain.step);
+            fitness = 1d / 16d + 10000d / (genome.step * genome.step);
         } else {
             double d = Vector2D.DoubleUtil.distance(position.x, position.y, goal.x, goal.y);
             fitness = 1d / (d * d);
@@ -111,7 +117,7 @@ public class Player {
 
     Player makeChild() {
         Player child = new Player();
-        child.brain = brain.copy();
+        child.genome = genome.copy();
         child.strategy = strategy;
         return child;
     }
@@ -121,7 +127,7 @@ public class Player {
     }
 
     public int getStepCount() {
-        return brain.step;
+        return genome.step;
     }
 
     public double getFitness() {
@@ -140,8 +146,8 @@ public class Player {
         this.dead = dead;
     }
 
-    public Brain getBrain() {
-        return brain;
+    public Genome getGenome() {
+        return genome;
     }
 
     public boolean isBest() {

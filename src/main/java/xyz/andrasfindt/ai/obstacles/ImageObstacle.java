@@ -1,5 +1,8 @@
-package xyz.andrasfindt.ai;
+package xyz.andrasfindt.ai.obstacles;
 
+
+import xyz.andrasfindt.ai.Game;
+import xyz.andrasfindt.ai.geom.Vector2D;
 
 import javax.validation.constraints.NotNull;
 
@@ -13,7 +16,7 @@ public class ImageObstacle extends Obstacle {
     }
 
     @Override
-    boolean hit(@NotNull Vector2D position) {
+    public boolean hit(@NotNull Vector2D position) {
         return getPixelAt(position) <= Game.COLLISION_THRESHOLD;
     }
 

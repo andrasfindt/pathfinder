@@ -12,7 +12,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import xyz.andrasfindt.ai.Game;
-import xyz.andrasfindt.ai.ImageObstacle;
+import xyz.andrasfindt.ai.obstacles.ImageObstacle;
 import xyz.andrasfindt.ai.ui.SceneController;
 
 import javax.imageio.ImageIO;

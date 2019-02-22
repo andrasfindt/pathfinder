@@ -1,4 +1,4 @@
-package xyz.andrasfindt.ai;
+package xyz.andrasfindt.ai.obstacles;
 
 import java.awt.geom.Rectangle2D;
 

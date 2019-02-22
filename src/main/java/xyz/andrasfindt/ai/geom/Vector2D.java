@@ -1,11 +1,11 @@
-package xyz.andrasfindt.ai;
+package xyz.andrasfindt.ai.geom;
 
 public class Vector2D {
 
     public static final Vector2D ZERO = new Vector2D(0d, 0d);
 
-    final double x;
-    final double y;
+    public final double x;
+    public final double y;
 
     public Vector2D(double x, double y) {
         this.x = x;
@@ -14,14 +14,6 @@ public class Vector2D {
 
     public static Vector2D fromAngle(double angle) {
         return new Vector2D(Math.cos(angle), Math.sin(angle));
-    }
-
-    public double getX() {
-        return x;
-    }
-
-    public double getY() {
-        return y;
     }
 
     public double distance(double x, double y) {
@@ -79,7 +71,7 @@ public class Vector2D {
         return this;
     }
 
-    protected Vector2D copy() {
+    public Vector2D copy() {
         return new Vector2D(x, y);
     }
 
@@ -100,8 +92,8 @@ public class Vector2D {
         return x == v.x && y == v.y;
     }
 
-    static class DoubleUtil {
-        static double distance(double x0, double y0, double x1, double y1) {
+    public static class DoubleUtil {
+        public static double distance(double x0, double y0, double x1, double y1) {
             return Math.sqrt(Math.pow(x1 - x0, 2) + Math.pow(y1 - y0, 2));
         }
     }

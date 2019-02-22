@@ -1,4 +1,6 @@
-package xyz.andrasfindt.ai;
+package xyz.andrasfindt.ai.obstacles;
+
+import xyz.andrasfindt.ai.geom.Vector2D;
 
 import java.awt.geom.Rectangle2D;
 
@@ -13,7 +15,7 @@ public class RectangleObstacle extends Obstacle implements Rectangle {
     }
 
     @Override
-    boolean hit(Vector2D position) {
+    public boolean hit(Vector2D position) {
         boolean greaterThanStartX = position.x > start.x;
         boolean lessThanEndX = position.x < end.x;
         boolean greaterThanStartY = position.y > start.y;

@@ -1,5 +1,7 @@
 package xyz.andrasfindt.ai;
 
+import xyz.andrasfindt.ai.internals.Population;
+
 public class DotGame {
     private Population population;
 
@@ -15,8 +17,7 @@ public class DotGame {
             population.calculateFitness();
             population.naturalSelection();
             population.mutateChildren();
-            Player bestPlayer = population.getPreviousGenerationBestPlayer();
-            listener.updateStats(bestPlayer);
+            listener.updateStats(new Status(population));
         } else {
             population.update();
             population.show();

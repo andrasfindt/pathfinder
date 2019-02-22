@@ -11,18 +11,20 @@ import javafx.scene.control.Label;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
-import xyz.andrasfindt.ai.Player;
 import xyz.andrasfindt.ai.DotGame;
 import xyz.andrasfindt.ai.Game;
-import xyz.andrasfindt.ai.ImageObstacle;
 import xyz.andrasfindt.ai.Listener;
-import xyz.andrasfindt.ai.Vector2D;
+import xyz.andrasfindt.ai.Status;
+import xyz.andrasfindt.ai.geom.Vector2D;
+import xyz.andrasfindt.ai.obstacles.ImageObstacle;
 
 import java.util.List;
 
+//import xyz.andrasfindt.ai.internals.Player;
+
 public class MazeGameController implements Listener {
     public static final Color DEFAULT = Color.BLUEVIOLET;
-
+    public static final double SCALE = Game.goal.distance(0, Game.SCREEN_HEIGHT);
     @FXML
     public CheckBox solved;
     @FXML
@@ -41,16 +43,13 @@ public class MazeGameController implements Listener {
     private Canvas gameCanvas;
     @FXML
     private Canvas gameCanvasBackground;
-
     private GraphicsContext graphicsContext;
     private double canvasWidth;
     private double canvasHeight;
     private Color currentColor = Color.BLACK;
     private AnimationTimer animator;
     private DotGame dotGame;
-
     private boolean drawOldLocations = false;
-    public static final double SCALE = Game.goal.distance(0, Game.SCREEN_HEIGHT);
 
     public void initialize() {
         graphicsContext = gameCanvas.getGraphicsContext2D();
@@ -97,7 +96,7 @@ public class MazeGameController implements Listener {
         }
         graphicsContext2D.setStroke(Color.RED);
         graphicsContext2D.setFill(Color.RED);
-        graphicsContext2D.fillOval(Game.goal.getX() - 3d, Game.goal.getY() - 3d, 6d, 6d);
+        graphicsContext2D.fillOval(Game.goal.x - 3d, Game.goal.y - 3d, 6d, 6d);
     }
 
     private void initDraw() {
@@ -116,29 +115,31 @@ public class MazeGameController implements Listener {
             graphicsContext.setStroke(currentColor);
             graphicsContext.setFill(currentColor);
         } else if (currentColor != DEFAULT) {
-            //todo noo!
-//            double d = position.distance(Game.goal);
-//            System.out.println(d);
-//            System.out.println(SCALE);
-//            double scaled = d/ SCALE;
-//            currentColor = Color.hsb(DEFAULT.getHue(), scaled, 1.0);//DEFAULT;
+            //fixme this code calculates the distance to the goal for every dot at every step. too expensive.
+            // Perhaps we can have each dot base its color on some feature of its genome (a hash of sorts of the first gene?)
+            /*
+            double d = position.distance(Game.goal);
+            System.out.println(d);
+            System.out.println(SCALE);
+            double scaled = d/ SCALE;
+            currentColor = Color.hsb(DEFAULT.getHue(), scaled, 1.0);//DEFAULT;
+            */
             currentColor = DEFAULT;
             graphicsContext.setStroke(currentColor);
             graphicsContext.setFill(currentColor);
         }
-        graphicsContext.fillOval(position.getX() - 2d, position.getY() - 2d, 3d, 3d);
+        graphicsContext.fillOval(position.x - 2d, position.y - 2d, 3d, 3d);
     }
 
     @Override
-    public void updateStats(Player bestPlayer) {
-        solved.setSelected(bestPlayer.hasReachedGoal());
-        stepsTaken.setText(String.valueOf(bestPlayer.getStepCount()));
-        generation.setText(String.valueOf(dotGame.getCurrentGeneration()));
-//        popSize.setText(String.valueOf(Game.POPULATION_SIZE));
-        popSize.setText(String.valueOf(dotGame.getAliveCount()));
-        speed.setText(String.valueOf(Game.SPEED_LIMIT));
-        maxFitness.setText(String.format("%f", bestPlayer.getFitness()));
-        mutationRate.setText(String.format("%4.3f%%", Game.MUTATION_RATE * 100d));
+    public void updateStats(Status status) {
+        solved.setSelected(status.isSolved());
+        stepsTaken.setText(String.valueOf(status.getStepsTaken()));
+        generation.setText(String.valueOf(status.getCurrentGeneration()));
+        popSize.setText(String.valueOf(status.getAliveCount()));
+        speed.setText(String.valueOf(status.getSpeed()));
+        maxFitness.setText(String.format("%f", status.getMaxFitness()));
+        mutationRate.setText(String.format("%4.3f%%", status.getMutationRate() * 100d));
         reset();
     }
 

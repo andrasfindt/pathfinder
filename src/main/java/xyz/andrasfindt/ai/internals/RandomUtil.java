@@ -1,4 +1,4 @@
-package xyz.andrasfindt.ai;
+package xyz.andrasfindt.ai.internals;
 
 import java.util.Random;
 

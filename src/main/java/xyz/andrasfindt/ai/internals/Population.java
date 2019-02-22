@@ -1,6 +1,10 @@
-package xyz.andrasfindt.ai;
+package xyz.andrasfindt.ai.internals;
+
+import xyz.andrasfindt.ai.Game;
+import xyz.andrasfindt.ai.Listener;
 
 import java.util.Arrays;
+import java.util.stream.IntStream;
 
 public class Population {
 
@@ -32,19 +36,19 @@ public class Population {
         }
     }
 
-    void show() {
+    public void show() {
         for (int i = players.length - 1; i >= 0; i--) {
             players[i].draw(listener);
         }
     }
 
-    public long getAliveCount() {
-        return Arrays.stream(players).filter(s -> !s.isDead()).count();
+    public int getAliveCount() {
+        return (int) Arrays.stream(players).filter(s -> !s.isDead()).count();
     }
 
-    void update() {
+    public void update() {
         for (Player player : players) {
-            if (player.getBrain().step > minStep) {
+            if (player.getGenome().step > minStep) {
                 player.setDead(true);
             } else {
                 player.update();
@@ -52,13 +56,13 @@ public class Population {
         }
     }
 
-    void calculateFitness() {
+    public void calculateFitness() {
         for (Player player : players) {
             player.calculateFitness();
         }
     }
 
-    boolean allDotsDead() {
+    public boolean allDotsDead() {
         for (Player player : players) {
             if (!player.isDead() && !player.hasReachedGoal()) {
                 return false;
@@ -67,7 +71,7 @@ public class Population {
         return true;
     }
 
-    void naturalSelection() {
+    public void naturalSelection() {
         Player[] newPlayers = new Player[players.length];//next gen
         setBestDot();
         calculateFitnessSum();
@@ -98,10 +102,8 @@ public class Population {
         return null;
     }
 
-    void mutateChildren() {
-        for (int i = 1; i < players.length; i++) {
-            players[i].getBrain().mutate();
-        }
+    public void mutateChildren() {
+        IntStream.range(1, players.length).forEach(i -> players[i].getGenome().mutate());
     }
 
     private void setBestDot() {
@@ -116,9 +118,9 @@ public class Population {
         bestPlayer = maxIndex;
         oldBestPlayer = players[bestPlayer];
         if (players[bestPlayer].hasReachedGoal()) {
-            minStep = players[bestPlayer].getBrain().step;
+            minStep = players[bestPlayer].getGenome().step;
         }
-        System.out.printf("%s gen: %d max: %s step: %d max_speed: %f\n", players[bestPlayer].hasReachedGoal() ? "*" : " ", gen, max, players[bestPlayer].getBrain().step, Game.SPEED_LIMIT);
+        System.out.printf("%s gen: %d max: %s step: %d max_speed: %f\n", players[bestPlayer].hasReachedGoal() ? "*" : " ", gen, max, players[bestPlayer].getGenome().step, Game.SPEED_LIMIT);
     }
 
 

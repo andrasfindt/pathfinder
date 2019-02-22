@@ -1,8 +1,13 @@
-package xyz.andrasfindt.ai;
+package xyz.andrasfindt.ai.internals;
 
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import xyz.andrasfindt.ai.Game;
+import xyz.andrasfindt.ai.internals.Player;
+import xyz.andrasfindt.ai.internals.RandomUtil;
+import xyz.andrasfindt.ai.geom.Vector2D;
+import xyz.andrasfindt.ai.obstacles.RectangleObstacle;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertFalse;
@@ -17,7 +22,6 @@ public class PlayerTest {
     }
 
     @Test
-    @Ignore
     public void update() throws Exception {
         Player player = new Player();
         player.setPosition(new Vector2D(-2d, -2d));
@@ -38,7 +42,7 @@ public class PlayerTest {
     public void makeChildShouldResultInIdenticalCopiesOfDirections() throws Exception {
         Player player = new Player();
         Player player1 = player.makeChild();
-        assertArrayEquals(player.getBrain().directions, player1.getBrain().directions);
+        assertArrayEquals(player.getGenome().genes, player1.getGenome().genes);
     }
 
     @Test

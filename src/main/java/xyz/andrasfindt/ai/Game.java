@@ -1,5 +1,9 @@
 package xyz.andrasfindt.ai;
 
+import xyz.andrasfindt.ai.geom.Vector2D;
+import xyz.andrasfindt.ai.obstacles.ImageObstacle;
+import xyz.andrasfindt.ai.obstacles.Obstacle;
+
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +21,7 @@ public class Game {
     public static int POPULATION_SIZE = 1000;
     public static double MUTATION_RATE = 0.01d;
     public static double SPEED_LIMIT = 5d;
-    final static Vector2D screenSize = new Vector2D((double) SCREEN_WIDTH, (double) SCREEN_HEIGHT);
+    public final static Vector2D screenSize = new Vector2D((double) SCREEN_WIDTH, (double) SCREEN_HEIGHT);
     private static List<Obstacle> obstacles = getObstacles();
 
     public static List<Obstacle> getObstacles() {

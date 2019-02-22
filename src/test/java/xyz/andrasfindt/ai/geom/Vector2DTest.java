@@ -1,8 +1,7 @@
-package xyz.andrasfindt.ai;
+package xyz.andrasfindt.ai.geom;
 
 import org.junit.Test;
-
-import java.math.BigDecimal;
+import xyz.andrasfindt.ai.geom.Vector2D;
 
 import static junit.framework.TestCase.assertEquals;
 
