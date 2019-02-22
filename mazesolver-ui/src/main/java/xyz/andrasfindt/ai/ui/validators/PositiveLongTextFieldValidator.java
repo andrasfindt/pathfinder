@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 
 public class PositiveLongTextFieldValidator implements EventHandler<ActionEvent>, ChangeListener<Boolean> {
-    public static final BigInteger MAX_LONG = BigInteger.valueOf(Long.MAX_VALUE);
+    private static final BigInteger MAX_LONG = BigInteger.valueOf(Long.MAX_VALUE);
     private TextField textField;
 
     public PositiveLongTextFieldValidator(@NotNull TextField textField) {
@@ -36,10 +36,12 @@ public class PositiveLongTextFieldValidator implements EventHandler<ActionEvent>
     private void validateNumberInput(TextField textField) {
         String[] split = textField.getText().split("[^\\d+]+");
         String sb = String.join("", split);
-        BigInteger temp = new BigInteger(sb);
-        if (MAX_LONG.compareTo(temp) >= 0) {
-            textField.setText(sb);
+        if (!sb.isBlank()) {
+            BigInteger temp = new BigInteger(sb);
+            if (MAX_LONG.compareTo(temp) >= 0) {
+                textField.setText(sb);
+            }
         }
-        textField.setText(sb);
+        textField.setText(MAX_LONG.toString());
     }
 }

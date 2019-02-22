@@ -35,10 +35,12 @@ public class PositiveIntegerTextFieldValidator implements EventHandler<javafx.ev
     private void validateNumberInput(TextField textField) {
         String[] split = textField.getText().split("[^\\d+]+");
         String sb = String.join("", split);
-        BigInteger temp = new BigInteger(sb);
-        if (MAX_INT.compareTo(temp) >= 0) {
-            textField.setText(sb);
+        if (!sb.isBlank()) {
+            BigInteger temp = new BigInteger(sb);
+            if (MAX_INT.compareTo(temp) >= 0) {
+                textField.setText(sb);
+            }
         }
-        textField.setText(sb);
+        textField.setText(MAX_INT.toString());
     }
 }
