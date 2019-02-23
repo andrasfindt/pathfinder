@@ -58,7 +58,7 @@ public class Creep {
     void update() {
         if (!dead && !reachedGoal) {
             move();
-            if (Vector2D.DoubleUtil.distance(position.x, position.y, Game.Setup.goal.x, Game.Setup.goal.y) < 5d) {//if reached goal
+            if (position.distance(Game.Setup.goal) < 5d) {//if reached goal
                 reachedGoal = true;
             } else if (isOutOfBounds() || hasHitObstacle()) {
                 switch (strategy) {
@@ -114,7 +114,7 @@ public class Creep {
         if (reachedGoal) {
             fitness = 1d / 16d + 10000d / (genome.step * genome.step);
         } else {
-            double d = Vector2D.DoubleUtil.distance(position.x, position.y, Game.Setup.goal.x, Game.Setup.goal.y);
+            double d = position.distance(Game.Setup.goal);
             fitness = 1d / (d * d);
         }
     }

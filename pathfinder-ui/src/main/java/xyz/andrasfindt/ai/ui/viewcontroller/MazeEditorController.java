@@ -8,6 +8,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
+import javafx.scene.input.MouseButton;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import xyz.andrasfindt.ai.Game;
@@ -21,7 +22,6 @@ import xyz.andrasfindt.ai.ui.drawing.DrawingViewWrapper;
 import xyz.andrasfindt.ai.ui.drawing.ImageUtil;
 
 import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -115,26 +115,45 @@ public class MazeEditorController implements DrawingListener {
     }
 
     @Override
-    public void startDraw(Vector2D point) {
+    public void startDraw(Vector2D point, MouseButton button) {
+        Color previousColor = assignTempDrawColor(button);
         graphicsContext.beginPath();
         graphicsContext.moveTo(point.x, point.y);
         graphicsContext.stroke();
+        graphicsContext.setStroke(previousColor);
+    }
 
+    private Color assignTempDrawColor(MouseButton button) {
+        Color previousColor = (Color) graphicsContext.getStroke();
+        if (button == MouseButton.PRIMARY) {
+            graphicsContext.setStroke(Color.BLACK);
+        } else if (button == MouseButton.SECONDARY) {
+            graphicsContext.setStroke(Color.WHITE);
+        }
+        return previousColor;
     }
 
     @Override
-    public void drawPath(Vector2D point) {
+    public void drawPath(Vector2D point, MouseButton button) {
+        Color previousColor = assignTempDrawColor(button);
         graphicsContext.lineTo(point.x, point.y);
         graphicsContext.stroke();
+        graphicsContext.setStroke(previousColor);
     }
 
     @Override
-    public void complete(DrawingEvent mouseEvent) {
+    public void complete(DrawingEvent mouseEvent, MouseButton button) {
         if (mouseEvent.isClickEvent()) {
             Vector2D location = mouseEvent.getHead();
-            graphicsContext.setFill(Color.BLACK);
-            graphicsContext.fillRect(location.x - 5d, location.y - 5d, 10d, 10d);
-            graphicsContext.setFill(Color.WHITE);
+            if (button == MouseButton.PRIMARY) {
+                graphicsContext.setFill(Color.BLACK);
+                graphicsContext.fillRect(location.x - 5d, location.y - 5d, 10d, 10d);
+                graphicsContext.setFill(Color.WHITE);
+            } else if (button == MouseButton.SECONDARY) {
+                graphicsContext.setFill(Color.WHITE);
+                graphicsContext.fillRect(location.x - 5d, location.y - 5d, 10d, 10d);
+                graphicsContext.setFill(Color.BLACK);
+            }
         } else {
             graphicsContext.closePath();
         }

@@ -11,6 +11,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseButton;
 import javafx.scene.paint.Color;
 import xyz.andrasfindt.ai.DotGame;
 import xyz.andrasfindt.ai.Game;
@@ -18,7 +19,6 @@ import xyz.andrasfindt.ai.Listener;
 import xyz.andrasfindt.ai.Status;
 import xyz.andrasfindt.ai.geom.Vector2D;
 import xyz.andrasfindt.ai.obstacle.ImageObstacle;
-import xyz.andrasfindt.ai.ui.SceneController;
 import xyz.andrasfindt.ai.ui.drawing.DrawingEvent;
 import xyz.andrasfindt.ai.ui.drawing.DrawingHandler;
 import xyz.andrasfindt.ai.ui.drawing.DrawingListener;
@@ -28,11 +28,10 @@ import xyz.andrasfindt.ai.ui.drawing.ImageUtil;
 import java.util.List;
 
 public class MazeGameController implements Listener, DrawingListener {
-    private static final Color DEFAULT = Color.BLUEVIOLET;
     public static final Color OBSTACLE_COLOR = Color.RED;
+    private static final Color DEFAULT = Color.BLUEVIOLET;
 //    private static final double HUE_SCALE = 360d / (Game.Setup.SCREEN_WIDTH - 1);
 //    private static final double SATURATION_SCALE = 1d / (Game.Setup.SCREEN_HEIGHT - 1);
-
     @FXML
     public CheckBox solved;
     @FXML
@@ -189,38 +188,44 @@ public class MazeGameController implements Listener, DrawingListener {
     }
 
     @Override
-    public void startDraw(Vector2D point) {
-        backgroundGraphicsContext.setLineWidth(10);
-        backgroundGraphicsContext.setStroke(OBSTACLE_COLOR);
-        backgroundGraphicsContext.beginPath();
-        backgroundGraphicsContext.moveTo(point.x, point.y);
-        graphicsContext.stroke();
-    }
-
-    @Override
-    public void drawPath(Vector2D point) {
-        backgroundGraphicsContext.beginPath();
-        backgroundGraphicsContext.lineTo(point.x, point.y);
-        backgroundGraphicsContext.stroke();
-    }
-
-    @Override
-    public void complete(DrawingEvent mouseEvent) {
-        if (mouseEvent.isClickEvent()) {
-            Vector2D location = mouseEvent.getHead();
-            backgroundGraphicsContext.setFill(OBSTACLE_COLOR);
-            backgroundGraphicsContext.fillRect(location.x - 5d, location.y - 5d, 10d, 10d);
-            backgroundGraphicsContext.setFill(currentColor);
-        } else {
-            backgroundGraphicsContext.closePath();
+    public void startDraw(Vector2D point, MouseButton button) {
+        if (button == MouseButton.PRIMARY) {
+            backgroundGraphicsContext.setLineWidth(10);
+            backgroundGraphicsContext.setStroke(OBSTACLE_COLOR);
+            backgroundGraphicsContext.beginPath();
+            backgroundGraphicsContext.moveTo(point.x, point.y);
+            graphicsContext.stroke();
         }
+    }
 
-        WritableImage wim = new WritableImage(Game.Setup.SCREEN_WIDTH, Game.Setup.SCREEN_HEIGHT);
-        gameCanvasBackground.snapshot(snapshotResult -> {
-            Byte[][] image = ImageUtil.getImage(snapshotResult.getImage());
-            Game.setExclusiveImageObstacle(new ImageObstacle(image));
-            return null;
-        }, null, wim);
+    @Override
+    public void drawPath(Vector2D point, MouseButton button) {
+        if (button == MouseButton.PRIMARY) {
+            backgroundGraphicsContext.beginPath();
+            backgroundGraphicsContext.lineTo(point.x, point.y);
+            backgroundGraphicsContext.stroke();
+        }
+    }
+
+    @Override
+    public void complete(DrawingEvent mouseEvent, MouseButton button) {
+        if (button == MouseButton.PRIMARY) {
+            if (mouseEvent.isClickEvent()) {
+                Vector2D location = mouseEvent.getHead();
+                backgroundGraphicsContext.setFill(OBSTACLE_COLOR);
+                backgroundGraphicsContext.fillRect(location.x - 5d, location.y - 5d, 10d, 10d);
+                backgroundGraphicsContext.setFill(currentColor);
+            } else {
+                backgroundGraphicsContext.closePath();
+            }
+
+            WritableImage wim = new WritableImage(Game.Setup.SCREEN_WIDTH, Game.Setup.SCREEN_HEIGHT);
+            gameCanvasBackground.snapshot(snapshotResult -> {
+                Byte[][] image = ImageUtil.getImage(snapshotResult.getImage());
+                Game.setExclusiveImageObstacle(new ImageObstacle(image));
+                return null;
+            }, null, wim);
+        }
 
     }
 }

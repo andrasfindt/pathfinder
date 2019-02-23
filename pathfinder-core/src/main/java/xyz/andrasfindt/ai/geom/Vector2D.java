@@ -98,10 +98,4 @@ public class Vector2D {
     public int hashCode() {
         return Objects.hash(x, y);
     }
-
-    public static class DoubleUtil {
-        public static double distance(double x0, double y0, double x1, double y1) {
-            return Math.sqrt(Math.pow(x1 - x0, 2) + Math.pow(y1 - y0, 2));
-        }
-    }
 }
