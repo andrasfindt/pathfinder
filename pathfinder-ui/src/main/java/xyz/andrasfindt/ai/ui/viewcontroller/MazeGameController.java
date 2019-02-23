@@ -28,11 +28,13 @@ import xyz.andrasfindt.ai.ui.drawing.ImageUtil;
 import java.util.List;
 
 public class MazeGameController implements Listener, DrawingListener {
-    public static final Color OBSTACLE_COLOR = Color.RED;
-    public static final String LOG_MESSAGE_FORMAT = "%s %s gen: %d max: %s step(t/m): %d/%d max_speed: %s creeps(a/p): %d/%d m-rate: %s r-seed: %d\n";
-    private static final Color DEFAULT_COLOR = Color.BLUEVIOLET;
-    //    private static final double HUE_SCALE = 360d / (Game.Setup.SCREEN_WIDTH - 1);
-//    private static final double SATURATION_SCALE = 1d / (Game.Setup.SCREEN_HEIGHT - 1);
+    private static final double GREEN_HUE = Color.GREEN.getHue();
+    private static final double GREEN_HUE_SCALING_FACTOR = GREEN_HUE / (Game.Setup.SCREEN_HEIGHT - Game.Setup.goal.y / 2d - 1d);
+    private static final Color OBSTACLE_COLOR = Color.FIREBRICK;
+    private static final String LOG_MESSAGE_FORMAT = "%s %s gen: %d max: %s step(t/m): %d/%d max_speed: %s creeps(a/p): %d/%d m-rate: %s r-seed: %d\n";
+    private static final Color DEFAULT_COLOR = Color.hsb(0d, 1d, 1d);//Color.BLUEVIOLET;
+    //    private static final double HUE_SCALE = ;
+    //    private static final double SATURATION_SCALE = 1d / (Game.Setup.SCREEN_HEIGHT - 1);
     @FXML
     public CheckBox solved;
     @FXML
@@ -121,24 +123,35 @@ public class MazeGameController implements Listener, DrawingListener {
     @Override
     public void draw(Vector2D position, boolean isBest) {
         if (isBest) {
-            currentColor = Color.LIGHTGREEN;
+            currentColor = Color.BLUE;
             graphicsContext.setStroke(currentColor);
             graphicsContext.setFill(currentColor);
-        } else if (currentColor != DEFAULT_COLOR) {
-            //fixme
-            // this calculates the color based on the current location.
-            // Perhaps we can have each dot base its color on some feature of its genome (a hash of sorts of the first gene? - not currently available)
-            /*
-            int angleOffset = 90;
-            double hue = position.x * HUE_SCALE + angleOffset;
-            double saturation = clamp(0d, position.y, Game.Setup.SCREEN_WIDTH - 1) * SATURATION_SCALE;
-            currentColor = Color.hsb(hue, saturation, 1.0);//DEFAULT_POPULATION;
-            */
+        } /*else if (currentColor != DEFAULT_COLOR) {
             currentColor = DEFAULT_COLOR;
+            graphicsContext.setStroke(currentColor);
+            graphicsContext.setFill(currentColor);
+        } */ else {
+            double hue = getHue(position);
+            double saturation = 1d;//clamp(0d, position.y, Game.Setup.SCREEN_WIDTH - 1) * SATURATION_SCALE;
+            currentColor = Color.hsb(hue, saturation, 1.0);//DEFAULT_POPULATION;
             graphicsContext.setStroke(currentColor);
             graphicsContext.setFill(currentColor);
         }
         graphicsContext.fillOval(position.x - 2d, position.y - 2d, 3d, 3d);
+    }
+
+    private double getHue(Vector2D position) {
+        //fixme
+        // this calculates the color based on the current location.
+        // Perhaps we can have each dot base its color on some feature of its genome (a hash of sorts of the first gene?
+        //  --- not currently available)
+
+        //todo
+        // in future the plan for this should be to calculate the value based on the distance to the current goal for
+        // the population.
+        //  --- currently this is only based on the vertical distance to the goal.
+
+        return GREEN_HUE - position.y * GREEN_HUE_SCALING_FACTOR;
     }
 
     @Override
