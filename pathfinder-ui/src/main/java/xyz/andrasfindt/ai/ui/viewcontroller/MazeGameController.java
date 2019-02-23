@@ -29,8 +29,8 @@ import java.util.List;
 
 public class MazeGameController implements Listener, DrawingListener {
     public static final Color OBSTACLE_COLOR = Color.RED;
-    private static final Color DEFAULT = Color.BLUEVIOLET;
-    public static final String LOG_MESSAGE_FORMAT = "%s %s gen: %d max: %s step: %d max_speed: %f a/p: %d/%d m-rate: %s r-seed: %d\n";
+    public static final String LOG_MESSAGE_FORMAT = "%s %s gen: %d max: %s step(t/m): %d/%d max_speed: %s creeps(a/p): %d/%d m-rate: %s r-seed: %d\n";
+    private static final Color DEFAULT_COLOR = Color.BLUEVIOLET;
     //    private static final double HUE_SCALE = 360d / (Game.Setup.SCREEN_WIDTH - 1);
 //    private static final double SATURATION_SCALE = 1d / (Game.Setup.SCREEN_HEIGHT - 1);
     @FXML
@@ -84,7 +84,7 @@ public class MazeGameController implements Listener, DrawingListener {
                 if (!drawOldLocations) {
                     reset();
                 }
-                popSize.setText(String.valueOf(dotGame.getAliveCount()));
+                popSize.setText(String.valueOf(dotGame.getAliveCount(DotGame.DEFAULT_POPULATION)));
                 dotGame.churn();
             }
         };
@@ -124,7 +124,7 @@ public class MazeGameController implements Listener, DrawingListener {
             currentColor = Color.LIGHTGREEN;
             graphicsContext.setStroke(currentColor);
             graphicsContext.setFill(currentColor);
-        } else if (currentColor != DEFAULT) {
+        } else if (currentColor != DEFAULT_COLOR) {
             //fixme
             // this calculates the color based on the current location.
             // Perhaps we can have each dot base its color on some feature of its genome (a hash of sorts of the first gene? - not currently available)
@@ -132,9 +132,9 @@ public class MazeGameController implements Listener, DrawingListener {
             int angleOffset = 90;
             double hue = position.x * HUE_SCALE + angleOffset;
             double saturation = clamp(0d, position.y, Game.Setup.SCREEN_WIDTH - 1) * SATURATION_SCALE;
-            currentColor = Color.hsb(hue, saturation, 1.0);//DEFAULT;
+            currentColor = Color.hsb(hue, saturation, 1.0);//DEFAULT_POPULATION;
             */
-            currentColor = DEFAULT;
+            currentColor = DEFAULT_COLOR;
             graphicsContext.setStroke(currentColor);
             graphicsContext.setFill(currentColor);
         }
@@ -145,8 +145,10 @@ public class MazeGameController implements Listener, DrawingListener {
     public void updateStats(Status status) {
         boolean solved = status.isSolved();
         int stepsTaken = status.getStepsTaken();
+        long stepsMax = status.getStepsMax();
         double maxFitness = status.getMaxFitness();
         double mutationRate = status.getMutationRate();
+        double speed = status.getSpeed();
         int currentGeneration = status.getCurrentGeneration();
         int aliveCount = status.getAliveCount();
         int populationTotal = status.getPopulationCount();
@@ -155,11 +157,11 @@ public class MazeGameController implements Listener, DrawingListener {
         this.solved.setSelected(solved);
         this.stepsTaken.setText(String.valueOf(stepsTaken));
         this.generation.setText(String.valueOf(currentGeneration));
-        this.speed.setText(String.valueOf(status.getSpeed()));
+        this.speed.setText(String.valueOf(speed));
         this.maxFitness.setText(String.format("%f", maxFitness));
         this.popSize.setText(String.valueOf(aliveCount));
         this.mutationRate.setText(String.format("%4.3f%%", mutationRate * 100d));
-        System.out.printf(LOG_MESSAGE_FORMAT, solved ? "*" : " ", truncPop ? "-" : "=", currentGeneration, maxFitness, stepsTaken, Game.Setup.SPEED_LIMIT, aliveCount, populationTotal, mutationRate, randomSeed);
+        System.out.printf(LOG_MESSAGE_FORMAT, solved ? "*" : " ", truncPop ? "-" : "=", currentGeneration, maxFitness, stepsTaken, stepsMax, this.speed, aliveCount, populationTotal, mutationRate, randomSeed);
         reset();
     }
 
@@ -167,7 +169,7 @@ public class MazeGameController implements Listener, DrawingListener {
     public void reset() {
         graphicsContext.clearRect(0, 0, canvasWidth, canvasHeight);
         graphicsContext.setLineWidth(1);
-        currentColor = DEFAULT;
+        currentColor = DEFAULT_COLOR;
         graphicsContext.setStroke(currentColor);
         graphicsContext.setFill(currentColor);
 

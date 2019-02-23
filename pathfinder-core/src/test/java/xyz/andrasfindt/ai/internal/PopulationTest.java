@@ -28,7 +28,7 @@ public class PopulationTest {
             public void updateStats(Status BestDot) {
 
             }
-        });
+        }, 1000);
         Arrays.stream(population.getCreeps()).forEach(creep -> creep.setFitness(1d));
         population.calculateFitnessSum();
         assertEquals(2.0, population.getFitnessSum(), 0.00005);

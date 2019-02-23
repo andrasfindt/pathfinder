@@ -14,6 +14,7 @@ public class Status {
     private int populationCount;
     private boolean truncatePopulation;
     private long randomSeed;
+    private long stepsMax;
 
     public Status(Population population) {
         Creep bestCreep = population.getPreviousGenerationBestCreep();
@@ -27,6 +28,7 @@ public class Status {
         populationCount = Game.Setup.POPULATION_SIZE;
         truncatePopulation = Game.Setup.TRUNCATE_POPULATION;
         randomSeed = Game.Setup.RANDOM_SEED;
+        stepsMax = population.getGenomeSize();
     }
 
     public boolean isSolved() {
@@ -67,5 +69,9 @@ public class Status {
 
     public long getRandomSeed() {
         return randomSeed;
+    }
+
+    public long getStepsMax() {
+        return stepsMax;
     }
 }

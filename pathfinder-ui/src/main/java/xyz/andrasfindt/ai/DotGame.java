@@ -2,21 +2,27 @@ package xyz.andrasfindt.ai;
 
 import xyz.andrasfindt.ai.internal.Population;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class DotGame {
-    private Population population;
+    public static final String DEFAULT_POPULATION = "default";
+    private Map<String, Population> activePopulations = new HashMap<>();
 
     public DotGame(Listener listener) {
-        this.population = new Population(Game.Setup.POPULATION_SIZE, listener);
+        this.activePopulations.put(DEFAULT_POPULATION, new Population(Game.Setup.POPULATION_SIZE, listener, 1000));
     }
 
     public void churn() {
-        if (population.allCreepsDead()) {
-            population.calculateFitness();
-            population.naturalSelection();
-            population.mutateChildren();
-        } else {
-            population.update();
-            population.show();
+        for (Population population : activePopulations.values()) {
+            if (population.allCreepsDead()) {
+                population.calculateFitness();
+                population.naturalSelection();
+                population.mutateChildren();
+            } else {
+                population.update();
+                population.show();
+            }
         }
     }
 
@@ -34,11 +40,11 @@ public class DotGame {
         }
     }
 
-    public int getCurrentGeneration() {
-        return population.getCurrentGeneration();
+    public int getCurrentGeneration(String key) {
+        return activePopulations.get(key).getCurrentGeneration();
     }
 
-    public long getAliveCount() {
-        return population.getAliveCount();
+    public long getAliveCount(String key) {
+        return activePopulations.get(key).getAliveCount();
     }
 }

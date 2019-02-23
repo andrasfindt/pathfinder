@@ -41,5 +41,6 @@ public class Game {
         public static double MUTATION_RATE = 0.01d;
         public static double SPEED_LIMIT = 5d;
         public static boolean TRUNCATE_POPULATION = true;
+        public static int DEFAULT_GENOME_SIZE = 1000;
     }
 }

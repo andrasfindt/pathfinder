@@ -9,31 +9,32 @@ import java.util.stream.IntStream;
 
 public class Population {
 
+    private final int genomeSize;
     private Listener listener;
-
     private Creep[] creeps;
-
     private double fitnessSum = 0d;
-
     private int gen = 1;
-
     private int bestCreep = 0;
-
-    private int minStep = 1000;
-
+    private int minStep;
     private Creep oldBestCreep;
 
-    public Population(int size, Listener listener) {
+    public Population(int size, Listener listener, int genomeSize) {
+        this.genomeSize = genomeSize;
+        this.minStep = genomeSize;
         RandomUtil.setRandomSeed(Game.Setup.RANDOM_SEED);
         this.listener = listener;
         creeps = new Creep[size];
         for (int i = 0; i < size; i++) {
 //            creeps[i] = new Creep(ObstacleStrategy.BOUNCE);
-            creeps[i] = new Creep();
+            creeps[i] = new Creep(this.genomeSize);
 //            if (gen == 1) {
 //                player.setStrategy();
 //            }
         }
+    }
+
+    public int getGenomeSize() {
+        return genomeSize;
     }
 
     public void show() {

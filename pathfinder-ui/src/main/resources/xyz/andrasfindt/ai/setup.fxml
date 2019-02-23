@@ -24,6 +24,7 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
             </rowConstraints>
             <children>
                 <Label fx:id="populationSizeLabel" minHeight="16" minWidth="60" text="PopSize" GridPane.columnIndex="0"/>
@@ -52,7 +53,9 @@
                 <TextField fx:id="randomSeed" prefHeight="27.0" prefWidth="60.0" promptText="(0)" text="0" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
                 <Label minHeight="16" minWidth="60" text="Truncate Pop" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
                 <CheckBox fx:id="optimizeSteps" text="(after initial path found)" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
-                <Button layoutX="14.0" layoutY="182.0" onAction="#handleButtonAction" text="Go" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
+                <Label minHeight="16" minWidth="60" text="Genome Size (steps)" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
+                <TextField fx:id="genomeSize" text="1000" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+                <Button layoutX="14.0" layoutY="182.0" onAction="#handleButtonAction" text="Go" GridPane.columnIndex="0" GridPane.rowIndex="6"/>
 
             </children>
         </GridPane>

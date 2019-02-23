@@ -12,6 +12,8 @@ import static org.junit.Assert.assertTrue;
 
 public class CreepTest {
 
+    private int genomeSize = 2;
+
     @Before
     public void setUp() throws Exception {
         Game.Setup.RANDOM_SEED = 0;
@@ -20,7 +22,7 @@ public class CreepTest {
 
     @Test
     public void update() throws Exception {
-        Creep creep = new Creep();
+        Creep creep = new Creep(genomeSize);
         creep.setPosition(new Vector2D(-2d, -2d));
         creep.update();
         assertTrue(creep.isDead());
@@ -29,7 +31,7 @@ public class CreepTest {
 
     @Test
     public void calculateFitness() throws Exception {
-        Creep creep = new Creep();
+        Creep creep = new Creep(genomeSize);
         creep.setPosition(Vector2D.ZERO);
         creep.calculateFitness();
         System.out.println(creep.getFitness());
@@ -37,7 +39,7 @@ public class CreepTest {
 
     @Test
     public void makeChildShouldResultInIdenticalCopiesOfDirections() throws Exception {
-        Creep creep = new Creep();
+        Creep creep = new Creep(genomeSize);
         Creep creep1 = creep.makeChild();
         assertArrayEquals(creep.getGenome().genes, creep1.getGenome().genes);
     }
@@ -46,7 +48,7 @@ public class CreepTest {
     public void hasHitObstacle() {
         Game.getObstacles().clear();
         Game.getObstacles().add(new RectangleObstacle(new Vector2D(0d, 300d), new Vector2D(600d, 310d)));
-        Creep creep = new Creep();
+        Creep creep = new Creep(genomeSize);
         creep.setPosition(new Vector2D(300d, 305d));
         boolean b = creep.hasHitObstacle();
         assertTrue(b);
@@ -59,7 +61,7 @@ public class CreepTest {
     public void hasHitObstacleFromUpdate() {
         Game.getObstacles().clear();
         Game.getObstacles().add(new RectangleObstacle(new Vector2D(0d, 300d), new Vector2D(600d, 310d)));
-        Creep creep = new Creep();
+        Creep creep = new Creep(genomeSize);
         creep.setPosition(new Vector2D(400d, 305d));
         creep.update();
 //        assertTrue(creep.dead);
@@ -67,7 +69,7 @@ public class CreepTest {
 
     @Test
     public void hasReachedGoalFromUpdate() {
-        Creep creep = new Creep();
+        Creep creep = new Creep(genomeSize);
         creep.setPosition(Game.Setup.goal);
         creep.update();
         assertTrue(creep.hasReachedGoal());

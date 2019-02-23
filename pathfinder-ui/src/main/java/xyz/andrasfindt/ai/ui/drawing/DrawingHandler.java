@@ -1,6 +1,5 @@
 package xyz.andrasfindt.ai.ui.drawing;
 
-import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import xyz.andrasfindt.ai.geom.Vector2D;
 

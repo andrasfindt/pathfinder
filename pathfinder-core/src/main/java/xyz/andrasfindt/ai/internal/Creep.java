@@ -20,13 +20,15 @@ public class Creep {
     private double fitness = 0d;
 
     private ObstacleStrategy strategy = ObstacleStrategy.DIE_ON_HIT;
+    private int genomeSize;
 
-    Creep() {
-        genome = new Genome(1000);
+    Creep(int genomeSize) {
+        this.genomeSize = genomeSize;
+        genome = new Genome(genomeSize);
     }
 
-    Creep(ObstacleStrategy strategy) {
-        this();
+    Creep(int genomeSize, ObstacleStrategy strategy) {
+        this(genomeSize);
         this.strategy = strategy;
     }
 
@@ -120,7 +122,7 @@ public class Creep {
     }
 
     Creep makeChild() {
-        Creep child = new Creep();
+        Creep child = new Creep(genomeSize);
         child.genome = genome.copy();
         child.strategy = strategy;
         return child;
