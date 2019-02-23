@@ -18,6 +18,7 @@ import xyz.andrasfindt.ai.ui.drawing.DrawingEvent;
 import xyz.andrasfindt.ai.ui.drawing.DrawingHandler;
 import xyz.andrasfindt.ai.ui.drawing.DrawingListener;
 import xyz.andrasfindt.ai.ui.drawing.DrawingViewWrapper;
+import xyz.andrasfindt.ai.ui.drawing.ImageUtil;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -95,30 +96,11 @@ public class MazeEditorController implements DrawingListener {
     public void use(ActionEvent actionEvent) {
         WritableImage wim = new WritableImage(Game.Setup.SCREEN_WIDTH, Game.Setup.SCREEN_HEIGHT);
         canvas.snapshot(snapshotResult -> {
-            Byte[][] image = getImage(snapshotResult.getImage());
+            Byte[][] image = ImageUtil.getImage(snapshotResult.getImage());
             Game.setExclusiveImageObstacle(new ImageObstacle(image));
             SceneController.setScene(SceneController.makeScene("gameMaze", "maze_game.fxml"));
             return null;
         }, null, wim);
-    }
-
-    private Byte[][] getImage(WritableImage image) {
-        BufferedImage bufferedImage = SwingFXUtils.fromFXImage(image, null);
-        Byte[][] imageBytes = new Byte[Game.Setup.SCREEN_HEIGHT][];
-        for (int x = 0; x < Game.Setup.SCREEN_HEIGHT; x++) {
-            imageBytes[x] = new Byte[Game.Setup.SCREEN_WIDTH];
-            for (int y = 0; y < Game.Setup.SCREEN_WIDTH; y++) {
-                int pixel = bufferedImage.getRGB(x, y);
-
-                int red = ((pixel >> 16) & 0xff);
-                int green = ((pixel >> 8) & 0xff);
-                int blue = (pixel & 0xff);
-
-                byte grayLevel = (byte) ((0.215 * red + 0.714 * green + 0.071 * blue) / 2);
-                imageBytes[x][y] = grayLevel;
-            }
-        }
-        return imageBytes;
     }
 
     @FXML

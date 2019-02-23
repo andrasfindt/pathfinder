@@ -27,9 +27,8 @@ public class Population {
         this.listener = listener;
         players = new Player[size];
         for (int i = 0; i < size; i++) {
-//            Player player = new Player(ObstacleStrategy.BOUNCE);
-            Player player = new Player();
-            players[i] = player;
+//            players[i] = new Player(ObstacleStrategy.BOUNCE);
+            players[i] = new Player();
 //            if (gen == 1) {
 //                player.setStrategy();
 //            }
@@ -37,9 +36,7 @@ public class Population {
     }
 
     public void show() {
-        for (int i = players.length - 1; i >= 0; i--) {
-            players[i].draw(listener);
-        }
+        IntStream.iterate(players.length - 1, i -> i >= 0, i -> i - 1).forEachOrdered(i -> players[i].draw(listener));
     }
 
     public int getAliveCount() {
@@ -47,13 +44,14 @@ public class Population {
     }
 
     public void update() {
-        for (Player player : players) {
-            if (player.getGenome().step > minStep) {
+        Arrays.stream(players).forEach(player -> {
+            //note: for second stage optimization. (if we disable this, we don't die early, and keep pathfinding until brain runs out)
+            if (Game.Setup.TRUNCATE_POPULATION && player.getGenome().step > minStep) {
                 player.setDead(true);
             } else {
                 player.update();
             }
-        }
+        });
     }
 
     public void calculateFitness() {
@@ -63,12 +61,7 @@ public class Population {
     }
 
     public boolean allDotsDead() {
-        for (Player player : players) {
-            if (!player.isDead() && !player.hasReachedGoal()) {
-                return false;
-            }
-        }
-        return true;
+        return Arrays.stream(players).noneMatch(player -> !player.isDead() && !player.hasReachedGoal());
     }
 
     public void naturalSelection() {

@@ -2,6 +2,7 @@ package xyz.andrasfindt.ai.ui.viewcontroller;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import xyz.andrasfindt.ai.Game;
@@ -15,6 +16,8 @@ public class SetupController {
     public TextField mutationRate;
     @FXML
     public TextField randomSeed;
+    @FXML
+    public CheckBox optimizeSteps;
     @FXML
     private TextField populationSize;
     @FXML
@@ -32,6 +35,7 @@ public class SetupController {
         Game.Setup.POPULATION_SIZE = Integer.valueOf(populationSize.getText());
         Game.Setup.MUTATION_RATE = Double.valueOf(mutationRate.getText());
         Game.Setup.RANDOM_SEED = Long.valueOf(randomSeed.getText());
+        Game.Setup.TRUNCATE_POPULATION = optimizeSteps.isSelected();
         SceneController.setScene("editMaze");
     }
 
@@ -40,6 +44,7 @@ public class SetupController {
         populationSize.setText(String.valueOf(Game.Setup.POPULATION_SIZE));
         mutationRate.setText(String.valueOf(Game.Setup.MUTATION_RATE));
         randomSeed.setText(String.valueOf(Game.Setup.RANDOM_SEED));
+        optimizeSteps.setSelected(Game.Setup.TRUNCATE_POPULATION);
         new PositiveIntegerTextFieldValidator(populationSize);
         new PositiveIntegerTextFieldValidator(width);
         new PositiveIntegerTextFieldValidator(height);

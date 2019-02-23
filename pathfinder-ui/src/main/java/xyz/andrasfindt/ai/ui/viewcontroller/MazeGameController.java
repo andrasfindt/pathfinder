@@ -9,6 +9,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.image.PixelWriter;
+import javafx.scene.image.WritableImage;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import xyz.andrasfindt.ai.DotGame;
@@ -17,12 +18,21 @@ import xyz.andrasfindt.ai.Listener;
 import xyz.andrasfindt.ai.Status;
 import xyz.andrasfindt.ai.geom.Vector2D;
 import xyz.andrasfindt.ai.obstacle.ImageObstacle;
+import xyz.andrasfindt.ai.ui.SceneController;
+import xyz.andrasfindt.ai.ui.drawing.DrawingEvent;
+import xyz.andrasfindt.ai.ui.drawing.DrawingHandler;
+import xyz.andrasfindt.ai.ui.drawing.DrawingListener;
+import xyz.andrasfindt.ai.ui.drawing.DrawingViewWrapper;
+import xyz.andrasfindt.ai.ui.drawing.ImageUtil;
 
 import java.util.List;
 
-public class MazeGameController implements Listener {
-    public static final Color DEFAULT = Color.BLUEVIOLET;
-    public static final double SCALE = Game.Setup.goal.distance(0, Game.Setup.SCREEN_HEIGHT);
+public class MazeGameController implements Listener, DrawingListener {
+    private static final Color DEFAULT = Color.BLUEVIOLET;
+    public static final Color OBSTACLE_COLOR = Color.RED;
+//    private static final double HUE_SCALE = 360d / (Game.Setup.SCREEN_WIDTH - 1);
+//    private static final double SATURATION_SCALE = 1d / (Game.Setup.SCREEN_HEIGHT - 1);
+
     @FXML
     public CheckBox solved;
     @FXML
@@ -42,6 +52,7 @@ public class MazeGameController implements Listener {
     @FXML
     private Canvas gameCanvasBackground;
     private GraphicsContext graphicsContext;
+    private GraphicsContext backgroundGraphicsContext;
     private double canvasWidth;
     private double canvasHeight;
     private Color currentColor = Color.BLACK;
@@ -51,6 +62,7 @@ public class MazeGameController implements Listener {
 
     public void initialize() {
         graphicsContext = gameCanvas.getGraphicsContext2D();
+        backgroundGraphicsContext = gameCanvasBackground.getGraphicsContext2D();
         canvasWidth = graphicsContext.getCanvas().getWidth();
         canvasHeight = graphicsContext.getCanvas().getHeight();
         drawBackground();
@@ -72,11 +84,11 @@ public class MazeGameController implements Listener {
                 if (!drawOldLocations) {
                     reset();
                 }
-
                 popSize.setText(String.valueOf(dotGame.getAliveCount()));
                 dotGame.churn();
             }
         };
+        new DrawingHandler(this);
     }
 
     private void drawBackground() {
@@ -113,14 +125,14 @@ public class MazeGameController implements Listener {
             graphicsContext.setStroke(currentColor);
             graphicsContext.setFill(currentColor);
         } else if (currentColor != DEFAULT) {
-            //fixme this code calculates the distance to the goal for every dot at every step. too expensive.
-            // Perhaps we can have each dot base its color on some feature of its genome (a hash of sorts of the first gene?)
+            //fixme
+            // this calculates the color based on the current location.
+            // Perhaps we can have each dot base its color on some feature of its genome (a hash of sorts of the first gene? - not currently available)
             /*
-            double d = position.distance(Game.goal);
-            System.out.println(d);
-            System.out.println(SCALE);
-            double scaled = d/ SCALE;
-            currentColor = Color.hsb(DEFAULT.getHue(), scaled, 1.0);//DEFAULT;
+            int angleOffset = 90;
+            double hue = position.x * HUE_SCALE + angleOffset;
+            double saturation = clamp(0d, position.y, Game.Setup.SCREEN_WIDTH - 1) * SATURATION_SCALE;
+            currentColor = Color.hsb(hue, saturation, 1.0);//DEFAULT;
             */
             currentColor = DEFAULT;
             graphicsContext.setStroke(currentColor);
@@ -169,5 +181,46 @@ public class MazeGameController implements Listener {
     public void toggleDrawOld(ActionEvent actionEvent) {
         actionEvent.getEventType();
         drawOldLocations = !drawOldLocations;
+    }
+
+    @Override
+    public DrawingViewWrapper getView() {
+        return new DrawingViewWrapper(gameCanvas);
+    }
+
+    @Override
+    public void startDraw(Vector2D point) {
+        backgroundGraphicsContext.setLineWidth(10);
+        backgroundGraphicsContext.setStroke(OBSTACLE_COLOR);
+        backgroundGraphicsContext.beginPath();
+        backgroundGraphicsContext.moveTo(point.x, point.y);
+        graphicsContext.stroke();
+    }
+
+    @Override
+    public void drawPath(Vector2D point) {
+        backgroundGraphicsContext.beginPath();
+        backgroundGraphicsContext.lineTo(point.x, point.y);
+        backgroundGraphicsContext.stroke();
+    }
+
+    @Override
+    public void complete(DrawingEvent mouseEvent) {
+        if (mouseEvent.isClickEvent()) {
+            Vector2D location = mouseEvent.getHead();
+            backgroundGraphicsContext.setFill(OBSTACLE_COLOR);
+            backgroundGraphicsContext.fillRect(location.x - 5d, location.y - 5d, 10d, 10d);
+            backgroundGraphicsContext.setFill(currentColor);
+        } else {
+            backgroundGraphicsContext.closePath();
+        }
+
+        WritableImage wim = new WritableImage(Game.Setup.SCREEN_WIDTH, Game.Setup.SCREEN_HEIGHT);
+        gameCanvasBackground.snapshot(snapshotResult -> {
+            Byte[][] image = ImageUtil.getImage(snapshotResult.getImage());
+            Game.setExclusiveImageObstacle(new ImageObstacle(image));
+            return null;
+        }, null, wim);
+
     }
 }

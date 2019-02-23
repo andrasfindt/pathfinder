@@ -42,5 +42,6 @@ public class Game {
         public static int POPULATION_SIZE = 1000;
         public static double MUTATION_RATE = 0.01d;
         public static double SPEED_LIMIT = 5d;
+        public static boolean TRUNCATE_POPULATION = true;
     }
 }
