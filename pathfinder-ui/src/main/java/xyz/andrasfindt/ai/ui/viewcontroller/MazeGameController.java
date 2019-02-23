@@ -30,7 +30,8 @@ import java.util.List;
 public class MazeGameController implements Listener, DrawingListener {
     public static final Color OBSTACLE_COLOR = Color.RED;
     private static final Color DEFAULT = Color.BLUEVIOLET;
-//    private static final double HUE_SCALE = 360d / (Game.Setup.SCREEN_WIDTH - 1);
+    public static final String LOG_MESSAGE_FORMAT = "%s %s gen: %d max: %s step: %d max_speed: %f a/p: %d/%d m-rate: %s r-seed: %d\n";
+    //    private static final double HUE_SCALE = 360d / (Game.Setup.SCREEN_WIDTH - 1);
 //    private static final double SATURATION_SCALE = 1d / (Game.Setup.SCREEN_HEIGHT - 1);
     @FXML
     public CheckBox solved;
@@ -142,13 +143,23 @@ public class MazeGameController implements Listener, DrawingListener {
 
     @Override
     public void updateStats(Status status) {
-        solved.setSelected(status.isSolved());
-        stepsTaken.setText(String.valueOf(status.getStepsTaken()));
-        generation.setText(String.valueOf(status.getCurrentGeneration()));
-        popSize.setText(String.valueOf(status.getAliveCount()));
-        speed.setText(String.valueOf(status.getSpeed()));
-        maxFitness.setText(String.format("%f", status.getMaxFitness()));
-        mutationRate.setText(String.format("%4.3f%%", status.getMutationRate() * 100d));
+        boolean solved = status.isSolved();
+        int stepsTaken = status.getStepsTaken();
+        double maxFitness = status.getMaxFitness();
+        double mutationRate = status.getMutationRate();
+        int currentGeneration = status.getCurrentGeneration();
+        int aliveCount = status.getAliveCount();
+        int populationTotal = status.getPopulationCount();
+        boolean truncPop = status.getTruncatePopulation();
+        long randomSeed = status.getRandomSeed();
+        this.solved.setSelected(solved);
+        this.stepsTaken.setText(String.valueOf(stepsTaken));
+        this.generation.setText(String.valueOf(currentGeneration));
+        this.speed.setText(String.valueOf(status.getSpeed()));
+        this.maxFitness.setText(String.format("%f", maxFitness));
+        this.popSize.setText(String.valueOf(aliveCount));
+        this.mutationRate.setText(String.format("%4.3f%%", mutationRate * 100d));
+        System.out.printf(LOG_MESSAGE_FORMAT, solved ? "*" : " ", truncPop ? "-" : "=", currentGeneration, maxFitness, stepsTaken, Game.Setup.SPEED_LIMIT, aliveCount, populationTotal, mutationRate, randomSeed);
         reset();
     }
 

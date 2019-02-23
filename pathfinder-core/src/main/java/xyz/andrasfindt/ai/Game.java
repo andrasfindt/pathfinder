@@ -1,7 +1,6 @@
 package xyz.andrasfindt.ai;
 
 import xyz.andrasfindt.ai.geom.Vector2D;
-import xyz.andrasfindt.ai.internal.Population;
 import xyz.andrasfindt.ai.obstacle.ImageObstacle;
 import xyz.andrasfindt.ai.obstacle.Obstacle;
 
@@ -12,7 +11,6 @@ import java.util.stream.Collectors;
 
 public class Game {
     private static List<Obstacle> obstacles = getObstacles();
-    private Population population;
 
     public static List<Obstacle> getObstacles() {
         if (obstacles == null) {

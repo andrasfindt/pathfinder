@@ -115,7 +115,6 @@ public class Population {
             minStep = creeps[bestCreep].getGenome().step;
         }
         listener.updateStats(new Status(this));
-        System.out.printf("%s gen: %d max: %s step: %d max_speed: %f\n", creeps[bestCreep].hasReachedGoal() ? "*" : " ", gen, max, creeps[bestCreep].getGenome().step, Game.Setup.SPEED_LIMIT);
     }
 
 

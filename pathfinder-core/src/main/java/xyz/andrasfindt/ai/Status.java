@@ -11,6 +11,9 @@ public class Status {
     private double speed;
     private double maxFitness;
     private double mutationRate;
+    private int populationCount;
+    private boolean truncatePopulation;
+    private long randomSeed;
 
     public Status(Population population) {
         Creep bestCreep = population.getPreviousGenerationBestCreep();
@@ -21,6 +24,9 @@ public class Status {
         speed = Game.Setup.SPEED_LIMIT;
         maxFitness = bestCreep.getFitness();
         mutationRate = Game.Setup.MUTATION_RATE;
+        populationCount = Game.Setup.POPULATION_SIZE;
+        truncatePopulation = Game.Setup.TRUNCATE_POPULATION;
+        randomSeed = Game.Setup.RANDOM_SEED;
     }
 
     public boolean isSolved() {
@@ -49,5 +55,17 @@ public class Status {
 
     public double getMutationRate() {
         return mutationRate;
+    }
+
+    public int getPopulationCount() {
+        return populationCount;
+    }
+
+    public boolean getTruncatePopulation() {
+        return truncatePopulation;
+    }
+
+    public long getRandomSeed() {
+        return randomSeed;
     }
 }
