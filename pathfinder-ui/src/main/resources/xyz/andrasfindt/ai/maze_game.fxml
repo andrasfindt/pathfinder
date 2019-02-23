@@ -14,6 +14,8 @@
             fx:controller="xyz.andrasfindt.ai.ui.viewcontroller.MazeGameController">
     <children>
         <Canvas fx:id="gameCanvasBackground" height="512.0" width="512.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
+        <Canvas fx:id="gameCanvasGoals" height="512.0" width="512.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
+        <Canvas fx:id="gameCanvasObstacles" height="512.0" width="512.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
         <Canvas fx:id="gameCanvas" height="512.0" width="512.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
         <Button layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#start" text="Start"/>
         <Box focusTraversable="true" onKeyTyped="#keyReleased"/>

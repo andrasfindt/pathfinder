@@ -48,10 +48,17 @@ public class MazeGameController implements Listener, DrawingListener {
     @FXML
     public Label mutationRate;
     @FXML
+    public Canvas gameCanvasGoals;
+    @FXML
+    public Canvas gameCanvasObstacles;
+    @FXML
     private Canvas gameCanvas;
     @FXML
     private Canvas gameCanvasBackground;
+
     private GraphicsContext graphicsContext;
+    private GraphicsContext goalsGraphicsContext;
+    private GraphicsContext obstaclesGraphicsContext;
     private GraphicsContext backgroundGraphicsContext;
     private double canvasWidth;
     private double canvasHeight;
@@ -63,6 +70,8 @@ public class MazeGameController implements Listener, DrawingListener {
     public void initialize() {
         graphicsContext = gameCanvas.getGraphicsContext2D();
         backgroundGraphicsContext = gameCanvasBackground.getGraphicsContext2D();
+        goalsGraphicsContext = gameCanvasBackground.getGraphicsContext2D();
+        obstaclesGraphicsContext = gameCanvasBackground.getGraphicsContext2D();
         canvasWidth = graphicsContext.getCanvas().getWidth();
         canvasHeight = graphicsContext.getCanvas().getHeight();
         drawBackground();
