@@ -29,7 +29,7 @@ public class PopulationTest {
 
             }
         });
-        Arrays.stream(population.getPlayers()).forEach(dot -> dot.setFitness(1d));
+        Arrays.stream(population.getCreeps()).forEach(creep -> creep.setFitness(1d));
         population.calculateFitnessSum();
         assertEquals(2.0, population.getFitnessSum(), 0.00005);
     }

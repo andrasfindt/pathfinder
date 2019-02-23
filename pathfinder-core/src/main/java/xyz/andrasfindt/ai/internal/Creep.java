@@ -6,7 +6,7 @@ import xyz.andrasfindt.ai.geom.Vector2D;
 import xyz.andrasfindt.ai.obstacle.Obstacle;
 import xyz.andrasfindt.ai.obstacle.ObstacleStrategy;
 
-public class Player {
+public class Creep {
     private Vector2D position = new Vector2D(Game.Setup.SCREEN_WIDTH / 2d, Game.Setup.SCREEN_HEIGHT - 10d);
     private Vector2D velocity = Vector2D.ZERO;
     private Vector2D acceleration = Vector2D.ZERO;
@@ -21,11 +21,11 @@ public class Player {
 
     private ObstacleStrategy strategy = ObstacleStrategy.DIE_ON_HIT;
 
-    Player() {
+    Creep() {
         genome = new Genome(1000);
     }
 
-    Player(ObstacleStrategy strategy) {
+    Creep(ObstacleStrategy strategy) {
         this();
         this.strategy = strategy;
     }
@@ -119,8 +119,8 @@ public class Player {
         }
     }
 
-    Player makeChild() {
-        Player child = new Player();
+    Creep makeChild() {
+        Creep child = new Creep();
         child.genome = genome.copy();
         child.strategy = strategy;
         return child;

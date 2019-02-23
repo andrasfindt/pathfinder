@@ -2,6 +2,7 @@ package xyz.andrasfindt.ai.internal;
 
 import xyz.andrasfindt.ai.Game;
 import xyz.andrasfindt.ai.Listener;
+import xyz.andrasfindt.ai.Status;
 
 import java.util.Arrays;
 import java.util.stream.IntStream;
@@ -10,25 +11,25 @@ public class Population {
 
     private Listener listener;
 
-    private Player[] players;
+    private Creep[] creeps;
 
     private double fitnessSum = 0d;
 
     private int gen = 1;
 
-    private int bestPlayer = 0;
+    private int bestCreep = 0;
 
     private int minStep = 1000;
 
-    private Player oldBestPlayer;
+    private Creep oldBestCreep;
 
     public Population(int size, Listener listener) {
         RandomUtil.setRandomSeed(Game.Setup.RANDOM_SEED);
         this.listener = listener;
-        players = new Player[size];
+        creeps = new Creep[size];
         for (int i = 0; i < size; i++) {
-//            players[i] = new Player(ObstacleStrategy.BOUNCE);
-            players[i] = new Player();
+//            creeps[i] = new Creep(ObstacleStrategy.BOUNCE);
+            creeps[i] = new Creep();
 //            if (gen == 1) {
 //                player.setStrategy();
 //            }
@@ -36,59 +37,59 @@ public class Population {
     }
 
     public void show() {
-        IntStream.iterate(players.length - 1, i -> i >= 0, i -> i - 1).forEachOrdered(i -> players[i].draw(listener));
+        IntStream.iterate(creeps.length - 1, i -> i >= 0, i -> i - 1).forEachOrdered(i -> creeps[i].draw(listener));
     }
 
     public int getAliveCount() {
-        return (int) Arrays.stream(players).filter(s -> !s.isDead()).count();
+        return (int) Arrays.stream(creeps).filter(s -> !s.isDead()).count();
     }
 
     public void update() {
-        Arrays.stream(players).forEach(player -> {
+        Arrays.stream(creeps).forEach(creep -> {
             //note: for second stage optimization. (if we disable this, we don't die early, and keep pathfinding until brain runs out)
-            if (Game.Setup.TRUNCATE_POPULATION && player.getGenome().step > minStep) {
-                player.setDead(true);
+            if (Game.Setup.TRUNCATE_POPULATION && creep.getGenome().step > minStep) {
+                creep.setDead(true);
             } else {
-                player.update();
+                creep.update();
             }
         });
     }
 
     public void calculateFitness() {
-        for (Player player : players) {
-            player.calculateFitness();
+        for (Creep creep : creeps) {
+            creep.calculateFitness();
         }
     }
 
-    public boolean allDotsDead() {
-        return Arrays.stream(players).noneMatch(player -> !player.isDead() && !player.hasReachedGoal());
+    public boolean allCreepsDead() {
+        return Arrays.stream(creeps).noneMatch(creep -> !creep.isDead() && !creep.hasReachedGoal());
     }
 
     public void naturalSelection() {
-        Player[] newPlayers = new Player[players.length];//next gen
-        setBestDot();
+        Creep[] newCreeps = new Creep[creeps.length];//next gen
+        setBestCreep();
         calculateFitnessSum();
-        newPlayers[0] = players[bestPlayer].makeChild();
-        newPlayers[0].setBest(true);
-        for (int i = 1; i < newPlayers.length; i++) {
-            Player parent = selectParent();
-            newPlayers[i] = parent.makeChild();
+        newCreeps[0] = creeps[bestCreep].makeChild();
+        newCreeps[0].setBest(true);
+        for (int i = 1; i < newCreeps.length; i++) {
+            Creep parent = selectParent();
+            newCreeps[i] = parent.makeChild();
         }
-        players = newPlayers.clone();
+        creeps = newCreeps.clone();
         gen++;
     }
 
     void calculateFitnessSum() {
-        this.fitnessSum = Arrays.stream(players).map(Player::getFitness).reduce(0d, Double::sum);
+        this.fitnessSum = Arrays.stream(creeps).map(Creep::getFitness).reduce(0d, Double::sum);
     }
 
-    private Player selectParent() {
+    private Creep selectParent() {
         double rand = RandomUtil.nextDouble(fitnessSum);
         double runningSum = 0d;
-        for (Player player : players) {
-            runningSum += player.getFitness();
+        for (Creep creep : creeps) {
+            runningSum += creep.getFitness();
             if (runningSum > rand) {
-                return player;
+                return creep;
             }
         }
         //should never get to this point
@@ -96,33 +97,34 @@ public class Population {
     }
 
     public void mutateChildren() {
-        IntStream.range(1, players.length).forEach(i -> players[i].getGenome().mutate());
+        IntStream.range(1, creeps.length).forEach(i -> creeps[i].getGenome().mutate());
     }
 
-    private void setBestDot() {
+    private void setBestCreep() {
         double max = 0d;
         int maxIndex = 0;
-        for (int i = 0; i < players.length; i++) {
-            if (players[i].getFitness() > max) {
-                max = players[i].getFitness();
+        for (int i = 0; i < creeps.length; i++) {
+            if (creeps[i].getFitness() > max) {
+                max = creeps[i].getFitness();
                 maxIndex = i;
             }
         }
-        bestPlayer = maxIndex;
-        oldBestPlayer = players[bestPlayer];
-        if (players[bestPlayer].hasReachedGoal()) {
-            minStep = players[bestPlayer].getGenome().step;
+        bestCreep = maxIndex;
+        oldBestCreep = creeps[bestCreep];
+        if (creeps[bestCreep].hasReachedGoal()) {
+            minStep = creeps[bestCreep].getGenome().step;
         }
-        System.out.printf("%s gen: %d max: %s step: %d max_speed: %f\n", players[bestPlayer].hasReachedGoal() ? "*" : " ", gen, max, players[bestPlayer].getGenome().step, Game.Setup.SPEED_LIMIT);
+        listener.updateStats(new Status(this));
+        System.out.printf("%s gen: %d max: %s step: %d max_speed: %f\n", creeps[bestCreep].hasReachedGoal() ? "*" : " ", gen, max, creeps[bestCreep].getGenome().step, Game.Setup.SPEED_LIMIT);
     }
 
 
-    public Player getPreviousGenerationBestPlayer() {
-        return oldBestPlayer;
+    public Creep getPreviousGenerationBestCreep() {
+        return oldBestCreep;
     }
 
-    public Player[] getPlayers() {
-        return players;
+    public Creep[] getCreeps() {
+        return creeps;
     }
 
     public double getFitnessSum() {

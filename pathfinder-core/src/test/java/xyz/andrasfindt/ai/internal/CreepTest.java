@@ -10,7 +10,7 @@ import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class PlayerTest {
+public class CreepTest {
 
     @Before
     public void setUp() throws Exception {
@@ -20,38 +20,38 @@ public class PlayerTest {
 
     @Test
     public void update() throws Exception {
-        Player player = new Player();
-        player.setPosition(new Vector2D(-2d, -2d));
-        player.update();
-        assertTrue(player.isDead());
-        System.out.println(player.getPosition());
+        Creep creep = new Creep();
+        creep.setPosition(new Vector2D(-2d, -2d));
+        creep.update();
+        assertTrue(creep.isDead());
+        System.out.println(creep.getPosition());
     }
 
     @Test
     public void calculateFitness() throws Exception {
-        Player player = new Player();
-        player.setPosition(Vector2D.ZERO);
-        player.calculateFitness();
-        System.out.println(player.getFitness());
+        Creep creep = new Creep();
+        creep.setPosition(Vector2D.ZERO);
+        creep.calculateFitness();
+        System.out.println(creep.getFitness());
     }
 
     @Test
     public void makeChildShouldResultInIdenticalCopiesOfDirections() throws Exception {
-        Player player = new Player();
-        Player player1 = player.makeChild();
-        assertArrayEquals(player.getGenome().genes, player1.getGenome().genes);
+        Creep creep = new Creep();
+        Creep creep1 = creep.makeChild();
+        assertArrayEquals(creep.getGenome().genes, creep1.getGenome().genes);
     }
 
     @Test
     public void hasHitObstacle() {
         Game.getObstacles().clear();
         Game.getObstacles().add(new RectangleObstacle(new Vector2D(0d, 300d), new Vector2D(600d, 310d)));
-        Player player = new Player();
-        player.setPosition(new Vector2D(300d, 305d));
-        boolean b = player.hasHitObstacle();
+        Creep creep = new Creep();
+        creep.setPosition(new Vector2D(300d, 305d));
+        boolean b = creep.hasHitObstacle();
         assertTrue(b);
-        player.setPosition(new Vector2D(300d, 320d));
-        b = player.hasHitObstacle();
+        creep.setPosition(new Vector2D(300d, 320d));
+        b = creep.hasHitObstacle();
         assertFalse(b);
     }
 
@@ -59,17 +59,17 @@ public class PlayerTest {
     public void hasHitObstacleFromUpdate() {
         Game.getObstacles().clear();
         Game.getObstacles().add(new RectangleObstacle(new Vector2D(0d, 300d), new Vector2D(600d, 310d)));
-        Player player = new Player();
-        player.setPosition(new Vector2D(400d, 305d));
-        player.update();
-//        assertTrue(player.dead);
+        Creep creep = new Creep();
+        creep.setPosition(new Vector2D(400d, 305d));
+        creep.update();
+//        assertTrue(creep.dead);
     }
 
     @Test
     public void hasReachedGoalFromUpdate() {
-        Player player = new Player();
-        player.setPosition(Game.Setup.goal);
-        player.update();
-        assertTrue(player.hasReachedGoal());
+        Creep creep = new Creep();
+        creep.setPosition(Game.Setup.goal);
+        creep.update();
+        assertTrue(creep.hasReachedGoal());
     }
 }

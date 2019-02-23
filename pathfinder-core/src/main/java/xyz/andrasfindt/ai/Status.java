@@ -1,6 +1,6 @@
 package xyz.andrasfindt.ai;
 
-import xyz.andrasfindt.ai.internal.Player;
+import xyz.andrasfindt.ai.internal.Creep;
 import xyz.andrasfindt.ai.internal.Population;
 
 public class Status {
@@ -12,14 +12,14 @@ public class Status {
     private double maxFitness;
     private double mutationRate;
 
-    Status(Population population) {
-        Player bestPlayer = population.getPreviousGenerationBestPlayer();
-        solved = bestPlayer.hasReachedGoal();
-        stepsTaken = bestPlayer.getStepCount();
+    public Status(Population population) {
+        Creep bestCreep = population.getPreviousGenerationBestCreep();
+        solved = bestCreep.hasReachedGoal();
+        stepsTaken = bestCreep.getStepCount();
         currentGeneration = population.getCurrentGeneration();
         aliveCount = population.getAliveCount();
         speed = Game.Setup.SPEED_LIMIT;
-        maxFitness = bestPlayer.getFitness();
+        maxFitness = bestCreep.getFitness();
         mutationRate = Game.Setup.MUTATION_RATE;
     }
 

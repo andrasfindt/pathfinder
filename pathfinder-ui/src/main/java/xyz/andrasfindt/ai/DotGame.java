@@ -5,19 +5,15 @@ import xyz.andrasfindt.ai.internal.Population;
 public class DotGame {
     private Population population;
 
-    private Listener listener;
-
     public DotGame(Listener listener) {
         this.population = new Population(Game.Setup.POPULATION_SIZE, listener);
-        this.listener = listener;
     }
 
     public void churn() {
-        if (population.allDotsDead()) {
+        if (population.allCreepsDead()) {
             population.calculateFitness();
             population.naturalSelection();
             population.mutateChildren();
-            listener.updateStats(new Status(population));
         } else {
             population.update();
             population.show();
