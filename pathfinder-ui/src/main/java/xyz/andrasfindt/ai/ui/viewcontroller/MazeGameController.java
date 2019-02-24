@@ -33,7 +33,7 @@ public class MazeGameController implements Listener, DrawingListener {
     private static final double GREEN_HUE = Color.GREEN.getHue();
     private static final double GREEN_HUE_SCALING_FACTOR = GREEN_HUE / (Game.Setup.SCREEN_HEIGHT - Game.Setup.goal.y / 2d - 1d);
     private static final Color OBSTACLE_COLOR = Color.SADDLEBROWN;
-    private static final String LOG_MESSAGE_FORMAT = "%s %s gen: %d max: %s step(t/m): %d/%d max_speed: %s creeps(a/p): %d/%d m-rate: %s r-seed: %d";
+    private static final String LOG_MESSAGE_FORMAT = "%s %s gen: %d max: %s step(t/m): %d/%d max_speed: %s creeps(a/p): %d/%d m-rate: %s r-seed: %d d-goal: %s";
     private static final Color DEFAULT_COLOR = Color.hsb(0d, 1d, 1d);//Color.BLUEVIOLET;
     @FXML
     public Label popSize;
@@ -175,9 +175,10 @@ public class MazeGameController implements Listener, DrawingListener {
         int populationTotal = status.getPopulationCount();
         boolean truncPop = status.getTruncatePopulation();
         long randomSeed = status.getRandomSeed();
+        double goalDistance = status.getDisanceFromGoal();
         String truncPopIndicator = truncPop ? "-" : "=";
         String statsLogMessage = String.format(LOG_MESSAGE_FORMAT, solved ? "*" : " ", truncPopIndicator, currentGeneration,
-                maxFitness, stepsTaken, stepsMax, speed, aliveCount, populationTotal, mutationRate, randomSeed);
+                maxFitness, stepsTaken, stepsMax, speed, aliveCount, populationTotal, mutationRate, randomSeed, goalDistance);
         System.out.println(statsLogMessage);
 
         statisticsGraphicsContext.clearRect(0d, 0d, canvasWidth - 1d, canvasHeight - 1d);
@@ -189,6 +190,7 @@ public class MazeGameController implements Listener, DrawingListener {
         statisticsGraphicsContext.strokeText(String.format("m-rate: %s", mutationRate), 20d, canvasHeight - 80d);
         statisticsGraphicsContext.strokeText(String.format("fitness: %s", maxFitness), 20d, canvasHeight - 96d);
         statisticsGraphicsContext.strokeText(String.format("speed: %s", speed), 20d, canvasHeight - 112d);
+        statisticsGraphicsContext.strokeText(String.format("d-goal: %s", goalDistance), 20d, canvasHeight - 128d);
         reset();
         drawGoals();
     }

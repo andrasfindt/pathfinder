@@ -15,9 +15,11 @@ public class Status {
     private boolean truncatePopulation;
     private long randomSeed;
     private long stepsMax;
+    private double disanceFromGoal;
 
     public Status(Population population) {
         Creep bestCreep = population.getPreviousGenerationBestCreep();
+        disanceFromGoal = bestCreep.getPosition().distance(Game.Setup.goal);
         solved = bestCreep.hasReachedGoal();
         stepsTaken = bestCreep.getStepCount();
         currentGeneration = population.getCurrentGeneration();
@@ -73,5 +75,9 @@ public class Status {
 
     public long getStepsMax() {
         return stepsMax;
+    }
+
+    public double getDisanceFromGoal() {
+        return disanceFromGoal;
     }
 }
