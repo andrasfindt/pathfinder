@@ -90,13 +90,6 @@ public class MazeGameController implements Listener, DrawingListener {
     }
 
     private void drawObstaclesIfNeeded() {
-        //fixme
-        // for now we are not clearing the obstacle layer on each pop update.
-        // the reason is that we are not currently destroying any obstacles.
-        // as it stands, clearing the canvas on each pop update means that any
-        // ongoing mouse drag event breaks the writing image to Byte[][] process.
-        //
-
         if (obstaclesNeedUpdating) {
             obstaclesGraphicsContext.setStroke(OBSTACLE_COLOR);
             obstaclesGraphicsContext.setFill(OBSTACLE_COLOR);
