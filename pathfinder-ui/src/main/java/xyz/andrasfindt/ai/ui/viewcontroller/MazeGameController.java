@@ -16,6 +16,7 @@ import xyz.andrasfindt.ai.DotGame;
 import xyz.andrasfindt.ai.Game;
 import xyz.andrasfindt.ai.Listener;
 import xyz.andrasfindt.ai.Status;
+import xyz.andrasfindt.ai.geom.Rectangle2D;
 import xyz.andrasfindt.ai.geom.Vector2D;
 import xyz.andrasfindt.ai.obstacle.BackgroundImageObstacle;
 import xyz.andrasfindt.ai.obstacle.PlayerImageObstacle;
@@ -26,6 +27,7 @@ import xyz.andrasfindt.ai.ui.drawing.DrawingViewWrapper;
 import xyz.andrasfindt.ai.ui.drawing.ImageUtil;
 
 import java.util.List;
+import java.util.OptionalDouble;
 
 public class MazeGameController implements Listener, DrawingListener {
     public static final Color DEFAULT_TEXT_COLOR = Color.BLUEVIOLET;
@@ -60,6 +62,7 @@ public class MazeGameController implements Listener, DrawingListener {
     private DotGame dotGame;
     private boolean drawOldLocations = false;
     private boolean obstaclesNeedUpdating = true;
+    private boolean goalsNeedUpdating = true;
 
     public void initialize() {
         creepsGraphicsContext = gameCanvasCreeps.getGraphicsContext2D();
@@ -104,10 +107,13 @@ public class MazeGameController implements Listener, DrawingListener {
     }
 
     private void drawGoals() {
-        goalsGraphicsContext.clearRect(0, 0, canvasWidth, canvasHeight);
-        goalsGraphicsContext.setStroke(Color.RED);
-        goalsGraphicsContext.setFill(Color.RED);
-        goalsGraphicsContext.fillOval(Game.Setup.goal.x - 3d, Game.Setup.goal.y - 3d, 6d, 6d);
+        if (goalsNeedUpdating) {
+            goalsGraphicsContext.clearRect(0, 0, canvasWidth, canvasHeight);
+            goalsGraphicsContext.setStroke(Color.RED);
+            goalsGraphicsContext.setFill(Color.RED);
+            goalsGraphicsContext.fillOval(Game.Setup.goal.x - 3d, Game.Setup.goal.y - 3d, 7d, 7d);
+            goalsNeedUpdating = false;
+        }
     }
 
     private void drawBackground() {
@@ -252,18 +258,29 @@ public class MazeGameController implements Listener, DrawingListener {
     @Override
     public void complete(DrawingEvent mouseEvent, MouseButton button) {
         if (button == MouseButton.PRIMARY) {
+            Rectangle2D boundingBox;
             if (mouseEvent.isClickEvent()) {
                 Vector2D location = mouseEvent.getHead();
                 obstaclesGraphicsContext.setFill(OBSTACLE_COLOR);
-                obstaclesGraphicsContext.fillRect(location.x - 5d, location.y - 5d, 10d, 10d);
+                boundingBox = new Rectangle2D(location.x - 5d, location.y - 5d, 10d, 10d);
+                obstaclesGraphicsContext.fillRect(boundingBox.startX, boundingBox.startY, boundingBox.width, boundingBox.height);
             } else {
+                OptionalDouble minX = mouseEvent.getPoints().stream().mapToDouble(s -> s.x).min();
+                OptionalDouble minY = mouseEvent.getPoints().stream().mapToDouble(s -> s.y).min();
+                OptionalDouble maxX = mouseEvent.getPoints().stream().mapToDouble(s -> s.x).max();
+                OptionalDouble maxY = mouseEvent.getPoints().stream().mapToDouble(s -> s.y).max();
+                double x = minX.isPresent() ? Math.max(0d, minX.getAsDouble() - 5d) : (0d);
+                double y = minY.isPresent() ? Math.max(0d, minY.getAsDouble() - 5d) : (0d);
+                double width = maxX.isPresent() ? Math.min(canvasWidth - 1, maxX.getAsDouble() - 5d) : (0d);
+                double height = maxY.isPresent() ? Math.min(canvasHeight - 1, maxY.getAsDouble() - 5d) : (0d);
+                boundingBox = new Rectangle2D(x, y, width, height);
                 obstaclesGraphicsContext.closePath();
             }
 
             WritableImage wim = new WritableImage(Game.Setup.SCREEN_WIDTH, Game.Setup.SCREEN_HEIGHT);
             gameCanvasObstacles.snapshot(snapshotResult -> {
                 Byte[][] image = ImageUtil.getImage(snapshotResult.getImage());
-                Game.getObstacles().add(new PlayerImageObstacle(image));
+                Game.getObstacles().add(new PlayerImageObstacle(image, boundingBox));
                 obstaclesNeedUpdating = true;
                 return null;
             }, null, wim);

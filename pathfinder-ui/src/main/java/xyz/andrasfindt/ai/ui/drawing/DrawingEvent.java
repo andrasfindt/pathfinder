@@ -20,8 +20,8 @@ public class DrawingEvent {
         return points.get(0);
     }
 
-    public List<Vector2D> getRemainder() {
-        return points.subList(1, points.size() - 1);
+    public List<Vector2D> getPoints() {
+        return points;
     }
 
     public boolean isClickEvent() {

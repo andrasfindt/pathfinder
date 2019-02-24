@@ -29,12 +29,12 @@ public class ImageUtil {
         return imageBytes;
     }
 
-    public static void writeImageToCanvas(PixelWriter pixelWriter, Byte[][] image, Color defaultBackgroundColor) {
+    public static void writeImageToCanvas(PixelWriter pixelWriter, Byte[][] image, Color color) {
         for (int x = 0; x < image.length; x++) {
             int lengthY = image[x].length;
             for (int y = 0; y < lengthY; y++) {
                 if (image[x][y] <= Game.Setup.COLLISION_THRESHOLD) {
-                    pixelWriter.setColor(x, y, defaultBackgroundColor);
+                    pixelWriter.setColor(x, y, color);
                 }
             }
         }
