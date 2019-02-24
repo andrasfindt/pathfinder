@@ -23,12 +23,8 @@ import xyz.andrasfindt.ai.ui.drawing.ImageUtil;
 
 import javax.imageio.ImageIO;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 public class MazeEditorController implements DrawingListener {
-
-    List<Vector2D> mouseEvent = new ArrayList<>();
     @FXML
     private Canvas canvas;
     private GraphicsContext graphicsContext;

@@ -16,8 +16,20 @@ public class PlayerImageObstacle extends ImageObstacle {
     }
 
     public PlayerImageObstacle(Byte[][] image, Rectangle2D boundingBox) {
-        super(image);
+        super(shrinkToBoundingBox(image, boundingBox));
         this.boundingBox = boundingBox;
+    }
+
+    private static Byte[][] shrinkToBoundingBox(Byte[][] image, Rectangle2D boundingBox) {
+        int width = (int) boundingBox.width;
+        int height = (int) boundingBox.height;
+        Byte[][] bytes = new Byte[width][height];
+        for (int w = 0; w < width; w++) {
+            for (int h = 0; h < height; h++) {
+                bytes[w][h] = image[(int) (boundingBox.start.x + w)][(int) (boundingBox.start.y + h)];
+            }
+        }
+        return bytes;
     }
 
     public Rectangle2D getBoundingBox() {
@@ -27,10 +39,11 @@ public class PlayerImageObstacle extends ImageObstacle {
     @Override
     protected Optional<Byte> getPixelAt(Vector2D position) {
         if (boundingBox.contains(position)) {
-            int x = clamp(position.x, (int) boundingBox.startX, (int) boundingBox.endX);
-            int y = clamp(position.y, (int) boundingBox.startY, (int) boundingBox.endY);
-            return Optional.of(image[x]
-                    [y]);
+//            int x = clamp(position.x, (int) boundingBox.startX, (int) boundingBox.endX);
+            int x = clamp(position.x - boundingBox.start.x, 0, (int) boundingBox.width);
+//            int y = clamp(position.y, (int) boundingBox.startY, (int) boundingBox.endY);
+            int y = clamp(position.y - boundingBox.start.y, 0, (int) boundingBox.height);
+            return Optional.of(image[x][y]);
         } else {
             return Optional.empty();
         }

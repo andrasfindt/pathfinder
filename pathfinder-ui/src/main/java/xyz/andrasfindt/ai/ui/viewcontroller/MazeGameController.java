@@ -101,7 +101,7 @@ public class MazeGameController implements Listener, DrawingListener {
             List<PlayerImageObstacle> imageObstacles = Game.getPlayerImageObstacles();
             PixelWriter pixelWriter = obstaclesGraphicsContext.getPixelWriter();
             for (PlayerImageObstacle imageObstacle : imageObstacles) {
-                ImageUtil.writeImageToCanvas(pixelWriter, imageObstacle.getImage(), OBSTACLE_COLOR);
+                ImageUtil.writeObstacleImageToCanvas(pixelWriter, imageObstacle, OBSTACLE_COLOR);
             }
         }
     }
@@ -263,7 +263,7 @@ public class MazeGameController implements Listener, DrawingListener {
                 Vector2D location = mouseEvent.getHead();
                 obstaclesGraphicsContext.setFill(OBSTACLE_COLOR);
                 boundingBox = new Rectangle2D(location.x - 5d, location.y - 5d, 10d, 10d);
-                obstaclesGraphicsContext.fillRect(boundingBox.startX, boundingBox.startY, boundingBox.width, boundingBox.height);
+                obstaclesGraphicsContext.fillRect(boundingBox.start.x, boundingBox.start.y, boundingBox.width, boundingBox.height);
             } else {
                 OptionalDouble minX = mouseEvent.getPoints().stream().mapToDouble(s -> s.x).min();
                 OptionalDouble minY = mouseEvent.getPoints().stream().mapToDouble(s -> s.y).min();
@@ -271,9 +271,9 @@ public class MazeGameController implements Listener, DrawingListener {
                 OptionalDouble maxY = mouseEvent.getPoints().stream().mapToDouble(s -> s.y).max();
                 double x = minX.isPresent() ? Math.max(0d, minX.getAsDouble() - 5d) : (0d);
                 double y = minY.isPresent() ? Math.max(0d, minY.getAsDouble() - 5d) : (0d);
-                double width = maxX.isPresent() ? Math.min(canvasWidth - 1, maxX.getAsDouble() - 5d) : (0d);
-                double height = maxY.isPresent() ? Math.min(canvasHeight - 1, maxY.getAsDouble() - 5d) : (0d);
-                boundingBox = new Rectangle2D(x, y, width, height);
+                double x1 = maxX.isPresent() ? Math.min(canvasWidth - 1, maxX.getAsDouble() + 5d) : (0d);
+                double y1 = maxY.isPresent() ? Math.min(canvasHeight - 1, maxY.getAsDouble() + 5d) : (0d);
+                boundingBox = new Rectangle2D(new Vector2D(x, y), new Vector2D(x1, y1));
                 obstaclesGraphicsContext.closePath();
             }
 
