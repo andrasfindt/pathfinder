@@ -39,9 +39,7 @@ public class PlayerImageObstacle extends ImageObstacle {
     @Override
     protected Optional<Byte> getPixelAt(Vector2D position) {
         if (boundingBox.contains(position)) {
-//            int x = clamp(position.x, (int) boundingBox.startX, (int) boundingBox.endX);
             int x = clamp(position.x - boundingBox.start.x, 0, (int) boundingBox.width);
-//            int y = clamp(position.y, (int) boundingBox.startY, (int) boundingBox.endY);
             int y = clamp(position.y - boundingBox.start.y, 0, (int) boundingBox.height);
             return Optional.of(image[x][y]);
         } else {

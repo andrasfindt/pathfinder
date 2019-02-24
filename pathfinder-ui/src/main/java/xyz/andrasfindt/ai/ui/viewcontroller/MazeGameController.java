@@ -26,12 +26,13 @@ import xyz.andrasfindt.ai.ui.drawing.DrawingListener;
 import xyz.andrasfindt.ai.ui.drawing.DrawingViewWrapper;
 import xyz.andrasfindt.ai.ui.drawing.ImageUtil;
 
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.OptionalDouble;
 
 public class MazeGameController implements Listener, DrawingListener {
-    public static final Color DEFAULT_TEXT_COLOR = Color.BLUEVIOLET;
-    public static final Color DEFAULT_BACKGROUND_COLOR = Color.BLACK;
+    private static final Color DEFAULT_TEXT_COLOR = Color.LIGHTCYAN;
+    private static final Color DEFAULT_BACKGROUND_COLOR = Color.BLACK;
     private static final double GREEN_HUE = Color.GREEN.getHue();
     private static final double GREEN_HUE_SCALING_FACTOR = GREEN_HUE / (Game.Setup.SCREEN_HEIGHT - Game.Setup.goal.y / 2d - 1d);
     private static final Color OBSTACLE_COLOR = Color.SADDLEBROWN;
@@ -45,6 +46,7 @@ public class MazeGameController implements Listener, DrawingListener {
     public Canvas gameCanvasObstacles;
     @FXML
     public Canvas gameCanvasStatistics;
+    DecimalFormat df = new DecimalFormat("#.##########");
     @FXML
     private Canvas gameCanvasCreeps;
     @FXML
@@ -63,6 +65,7 @@ public class MazeGameController implements Listener, DrawingListener {
     private boolean drawOldLocations = false;
     private boolean obstaclesNeedUpdating = true;
     private boolean goalsNeedUpdating = true;
+    private Color STATISTICS_BACKGROUND_COLOR = Color.color(0d, 0d, 0d, .5d);
 
     public void initialize() {
         creepsGraphicsContext = gameCanvasCreeps.getGraphicsContext2D();
@@ -189,14 +192,17 @@ public class MazeGameController implements Listener, DrawingListener {
 
         statisticsGraphicsContext.clearRect(0d, 0d, canvasWidth - 1d, canvasHeight - 1d);
         statisticsGraphicsContext.setStroke(DEFAULT_TEXT_COLOR);
-        statisticsGraphicsContext.strokeText(String.format("gen: %d | %s", currentGeneration, truncPopIndicator), 20d, canvasHeight - 16d);
-        statisticsGraphicsContext.strokeText(String.format("solved: %s", solved ? "yes" : "no"), 20d, canvasHeight - 32d);
-        statisticsGraphicsContext.strokeText(String.format("steps: %d/%d", stepsTaken, stepsMax), 20d, canvasHeight - 48d);
-        statisticsGraphicsContext.strokeText(String.format("pop: %d", populationTotal), 20d, canvasHeight - 64d);
-        statisticsGraphicsContext.strokeText(String.format("m-rate: %s", mutationRate), 20d, canvasHeight - 80d);
-        statisticsGraphicsContext.strokeText(String.format("fitness: %s", maxFitness), 20d, canvasHeight - 96d);
-        statisticsGraphicsContext.strokeText(String.format("speed: %s", speed), 20d, canvasHeight - 112d);
-        statisticsGraphicsContext.strokeText(String.format("d-goal: %s", goalDistance), 20d, canvasHeight - 128d);
+        statisticsGraphicsContext.setFill(STATISTICS_BACKGROUND_COLOR);
+        statisticsGraphicsContext.fillRect(0, canvasHeight - 148d, 180d, 140d);
+        double startPadding = 8d;
+        statisticsGraphicsContext.strokeText(String.format("gen: %d | %s", currentGeneration, truncPopIndicator), startPadding, canvasHeight - 16d);
+        statisticsGraphicsContext.strokeText(String.format("solved: %s", solved ? "yes" : "no"), startPadding, canvasHeight - 32d);
+        statisticsGraphicsContext.strokeText(String.format("steps: %d/%d", stepsTaken, stepsMax), startPadding, canvasHeight - 48d);
+        statisticsGraphicsContext.strokeText(String.format("pop: %d", populationTotal), startPadding, canvasHeight - 64d);
+        statisticsGraphicsContext.strokeText(String.format("m-rate: %s", df.format(mutationRate)), startPadding, canvasHeight - 80d);
+        statisticsGraphicsContext.strokeText(String.format("fitness: %s", df.format(maxFitness)), startPadding, canvasHeight - 96d);
+        statisticsGraphicsContext.strokeText(String.format("speed: %s", df.format(speed)), startPadding, canvasHeight - 112d);
+        statisticsGraphicsContext.strokeText(String.format("d-goal: %s", df.format(goalDistance)), startPadding, canvasHeight - 128d);
         reset();
         drawGoals();
     }
