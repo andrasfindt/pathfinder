@@ -7,7 +7,7 @@ import xyz.andrasfindt.ai.geom.Vector2D;
 import javax.validation.constraints.NotNull;
 import java.util.Optional;
 
-public class ImageObstacle extends Obstacle {
+public abstract class ImageObstacle extends Obstacle {
     public static final int W_MAX = Game.Setup.SCREEN_WIDTH - 1;
     public static final int H_MAX = Game.Setup.SCREEN_HEIGHT - 1;
     private Byte[][] image;

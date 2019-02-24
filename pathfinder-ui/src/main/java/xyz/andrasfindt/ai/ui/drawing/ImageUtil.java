@@ -1,7 +1,9 @@
 package xyz.andrasfindt.ai.ui.drawing;
 
 import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
+import javafx.scene.paint.Color;
 import xyz.andrasfindt.ai.Game;
 
 import java.awt.image.BufferedImage;
@@ -25,5 +27,16 @@ public class ImageUtil {
             }
         }
         return imageBytes;
+    }
+
+    public static void writeImageToCanvas(PixelWriter pixelWriter, Byte[][] image, Color defaultBackgroundColor) {
+        for (int x = 0; x < image.length; x++) {
+            int lengthY = image[x].length;
+            for (int y = 0; y < lengthY; y++) {
+                if (image[x][y] <= Game.Setup.COLLISION_THRESHOLD) {
+                    pixelWriter.setColor(x, y, defaultBackgroundColor);
+                }
+            }
+        }
     }
 }

@@ -1,8 +1,10 @@
 package xyz.andrasfindt.ai;
 
 import xyz.andrasfindt.ai.geom.Vector2D;
+import xyz.andrasfindt.ai.obstacle.BackgroundImageObstacle;
 import xyz.andrasfindt.ai.obstacle.ImageObstacle;
 import xyz.andrasfindt.ai.obstacle.Obstacle;
+import xyz.andrasfindt.ai.obstacle.PlayerImageObstacle;
 
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
@@ -19,13 +21,17 @@ public class Game {
         return obstacles;
     }
 
-    public static void setExclusiveImageObstacle(@NotNull ImageObstacle imageObstacle) {
+    public static void setBackgroundImageObstacle(@NotNull BackgroundImageObstacle imageObstacle) {
         obstacles = obstacles.stream().filter(o -> !(o instanceof ImageObstacle)).collect(Collectors.toList());
         obstacles.add(imageObstacle);
     }
 
-    public static List<ImageObstacle> getImageObstacles() {
-        return obstacles.stream().filter(o -> (o instanceof ImageObstacle)).map(o -> (ImageObstacle) o).collect(Collectors.toList());
+    public static List<BackgroundImageObstacle> getBackgroundImageObstacles() {
+        return obstacles.stream().filter(o -> (o instanceof BackgroundImageObstacle)).map(obstacle -> (BackgroundImageObstacle) obstacle).collect(Collectors.toList());
+    }
+
+    public static List<PlayerImageObstacle> getPlayerImageObstacles() {
+        return obstacles.stream().filter(o -> (o instanceof PlayerImageObstacle)).map(obstacle -> (PlayerImageObstacle) obstacle).collect(Collectors.toList());
     }
 
     public static class Setup {

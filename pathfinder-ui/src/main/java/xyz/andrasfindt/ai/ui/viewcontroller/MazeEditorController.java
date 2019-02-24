@@ -13,7 +13,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import xyz.andrasfindt.ai.Game;
 import xyz.andrasfindt.ai.geom.Vector2D;
-import xyz.andrasfindt.ai.obstacle.ImageObstacle;
+import xyz.andrasfindt.ai.obstacle.BackgroundImageObstacle;
 import xyz.andrasfindt.ai.ui.SceneController;
 import xyz.andrasfindt.ai.ui.drawing.DrawingEvent;
 import xyz.andrasfindt.ai.ui.drawing.DrawingHandler;
@@ -97,7 +97,7 @@ public class MazeEditorController implements DrawingListener {
         WritableImage wim = new WritableImage(Game.Setup.SCREEN_WIDTH, Game.Setup.SCREEN_HEIGHT);
         canvas.snapshot(snapshotResult -> {
             Byte[][] image = ImageUtil.getImage(snapshotResult.getImage());
-            Game.setExclusiveImageObstacle(new ImageObstacle(image));
+            Game.setBackgroundImageObstacle(new BackgroundImageObstacle(image));
             SceneController.setScene(SceneController.makeScene("gameMaze", "maze_game.fxml"));
             return null;
         }, null, wim);
