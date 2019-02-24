@@ -112,6 +112,8 @@ public class Creep {
         return hit;
     }
 
+    //fixme
+    // create new fitness function.
     void calculateFitness() {
         if (reachedGoal) {
             fitness = 1d / 16d + 10000d / (genome.step * genome.step);

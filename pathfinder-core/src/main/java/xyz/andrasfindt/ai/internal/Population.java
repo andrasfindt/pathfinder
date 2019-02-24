@@ -47,7 +47,10 @@ public class Population {
 
     public void update() {
         Arrays.stream(creeps).forEach(creep -> {
-            //note: for second stage optimization. (if we disable this, we don't die early, and keep pathfinding until brain runs out)
+            //note:
+            // for second stage optimization. (if we disable this, we don't die early, and keep pathfinding until brain runs out)
+            // while it will never improve on the fitness of the overall population, it ensures that if the goal changes,
+            // the population can be made to automatically adjust and use any dormant genes since last found path solution
             if (Game.Setup.TRUNCATE_POPULATION && creep.getGenome().step > minStep) {
                 creep.setDead(true);
             } else {
