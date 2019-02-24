@@ -188,6 +188,7 @@ public class MazeGameController implements Listener, DrawingListener {
         statisticsGraphicsContext.strokeText(String.format("pop: %d", populationTotal), 20d, canvasHeight - 64d);
         statisticsGraphicsContext.strokeText(String.format("m-rate: %s", mutationRate), 20d, canvasHeight - 80d);
         statisticsGraphicsContext.strokeText(String.format("fitness: %s", maxFitness), 20d, canvasHeight - 96d);
+        statisticsGraphicsContext.strokeText(String.format("speed: %s", speed), 20d, canvasHeight - 112d);
         reset();
         drawGoals();
     }

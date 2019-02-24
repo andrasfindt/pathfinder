@@ -116,7 +116,7 @@ public class Creep {
     // create new fitness function.
     void calculateFitness() {
         if (reachedGoal) {
-            fitness = 1d / 16d + 10000d / (genome.step * genome.step);
+            fitness = 1d / 16d + 8192d / (genome.step * genome.step);
         } else {
             double d = position.distance(Game.Setup.goal);
             fitness = 1d / (d * d);

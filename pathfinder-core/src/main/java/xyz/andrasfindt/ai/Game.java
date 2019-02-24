@@ -12,6 +12,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Game {
+
+    //todo
+    // implement externalized configuration
     private static List<Obstacle> obstacles = getObstacles();
 
     public static List<Obstacle> getObstacles() {
