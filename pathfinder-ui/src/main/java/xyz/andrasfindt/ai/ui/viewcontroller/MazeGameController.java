@@ -12,6 +12,7 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.paint.Color;
+import xyz.andrasfindt.ai.Destroyable;
 import xyz.andrasfindt.ai.DotGame;
 import xyz.andrasfindt.ai.Game;
 import xyz.andrasfindt.ai.Listener;
@@ -19,6 +20,7 @@ import xyz.andrasfindt.ai.Status;
 import xyz.andrasfindt.ai.geom.Rectangle2D;
 import xyz.andrasfindt.ai.geom.Vector2D;
 import xyz.andrasfindt.ai.obstacle.BackgroundImageObstacle;
+import xyz.andrasfindt.ai.obstacle.BarrierObstacle;
 import xyz.andrasfindt.ai.obstacle.PlayerImageObstacle;
 import xyz.andrasfindt.ai.ui.drawing.DrawingEvent;
 import xyz.andrasfindt.ai.ui.drawing.DrawingHandler;
@@ -65,6 +67,7 @@ public class MazeGameController implements Listener, DrawingListener {
     private boolean drawOldLocations = false;
     private boolean obstaclesNeedUpdating = true;
     private boolean goalsNeedUpdating = true;
+    private int obstacleLiveCount = 0;
     private Color STATISTICS_BACKGROUND_COLOR = Color.color(0d, 0d, 0d, .3333d);
 
     public void initialize() {
@@ -88,6 +91,10 @@ public class MazeGameController implements Listener, DrawingListener {
                     reset();
                 }
                 popSize.setText(String.valueOf(dotGame.getAliveCount(DotGame.DEFAULT_POPULATION)));
+                if (Game.getLiveObstacles().size() != obstacleLiveCount) {
+                    obstaclesNeedUpdating = true;
+                    obstacleLiveCount = Game.getLiveObstacles().size();
+                }
                 drawObstaclesIfNeeded();
                 dotGame.churn();
             }
@@ -103,8 +110,20 @@ public class MazeGameController implements Listener, DrawingListener {
             obstaclesNeedUpdating = false;
             List<PlayerImageObstacle> imageObstacles = Game.getPlayerImageObstacles();
             PixelWriter pixelWriter = obstaclesGraphicsContext.getPixelWriter();
+            int liveCount = 0;
             for (PlayerImageObstacle imageObstacle : imageObstacles) {
+                if ((imageObstacle instanceof Destroyable)) {
+                    if (((Destroyable) imageObstacle).isDead()) {
+                        continue;
+                    } else {
+                        liveCount++;
+                    }
+                }
                 ImageUtil.writeObstacleImageToCanvas(pixelWriter, imageObstacle, OBSTACLE_COLOR);
+            }
+            if (liveCount != obstacleLiveCount) {
+                obstacleLiveCount = liveCount;
+                obstaclesNeedUpdating = true;
             }
         }
     }
@@ -234,6 +253,8 @@ public class MazeGameController implements Listener, DrawingListener {
     public void toggleDrawOld(ActionEvent actionEvent) {
         actionEvent.getEventType();
         drawOldLocations = !drawOldLocations;
+        obstaclesNeedUpdating = true;
+        goalsNeedUpdating = true;
     }
 
     @Override
@@ -286,7 +307,7 @@ public class MazeGameController implements Listener, DrawingListener {
             WritableImage wim = new WritableImage(Game.Setup.SCREEN_WIDTH, Game.Setup.SCREEN_HEIGHT);
             gameCanvasObstacles.snapshot(snapshotResult -> {
                 Byte[][] image = ImageUtil.getImage(snapshotResult.getImage());
-                Game.getObstacles().add(new PlayerImageObstacle(image, boundingBox));
+                Game.getObstacles().add(new BarrierObstacle(image, boundingBox));
                 obstaclesNeedUpdating = true;
                 return null;
             }, null, wim);

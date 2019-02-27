@@ -9,7 +9,6 @@ import xyz.andrasfindt.ai.obstacle.PlayerImageObstacle;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class Game {
 
@@ -25,16 +24,47 @@ public class Game {
     }
 
     public static void setBackgroundImageObstacle(@NotNull BackgroundImageObstacle imageObstacle) {
-        obstacles = obstacles.stream().filter(o -> !(o instanceof ImageObstacle)).collect(Collectors.toList());
+        List<Obstacle> list = new ArrayList<>();
+        for (Obstacle o : obstacles) {
+            if (!(o instanceof ImageObstacle)) {
+                list.add(o);
+            }
+        }
+        obstacles = list;
         obstacles.add(imageObstacle);
     }
 
     public static List<BackgroundImageObstacle> getBackgroundImageObstacles() {
-        return obstacles.stream().filter(o -> (o instanceof BackgroundImageObstacle)).map(obstacle -> (BackgroundImageObstacle) obstacle).collect(Collectors.toList());
+        List<BackgroundImageObstacle> list = new ArrayList<>();
+        for (Obstacle o : obstacles) {
+            if ((o instanceof BackgroundImageObstacle)) {
+                BackgroundImageObstacle obstacle = (BackgroundImageObstacle) o;
+                list.add(obstacle);
+            }
+        }
+        return list;
     }
 
     public static List<PlayerImageObstacle> getPlayerImageObstacles() {
-        return obstacles.stream().filter(o -> (o instanceof PlayerImageObstacle)).map(obstacle -> (PlayerImageObstacle) obstacle).collect(Collectors.toList());
+        List<PlayerImageObstacle> list = new ArrayList<>();
+        for (Obstacle o : obstacles) {
+            if ((o instanceof PlayerImageObstacle)) {
+                PlayerImageObstacle obstacle = (PlayerImageObstacle) o;
+                list.add(obstacle);
+            }
+        }
+        return list;
+    }
+
+    public static List<PlayerImageObstacle> getLiveObstacles() {
+        List<PlayerImageObstacle> list = new ArrayList<>();
+        for (Obstacle o : obstacles) {
+            if ((o instanceof Destroyable) && !((Destroyable) o).isDead()) {
+                PlayerImageObstacle obstacle = (PlayerImageObstacle) o;
+                list.add(obstacle);
+            }
+        }
+        return list;
     }
 
     public static class Setup {
@@ -50,6 +80,6 @@ public class Game {
         public static double MUTATION_RATE = 0.01d;
         public static double SPEED_LIMIT = 5d;
         public static boolean TRUNCATE_POPULATION = true;
-        public static int DEFAULT_GENOME_SIZE = 1000;
+        public static int GENOME_SIZE = 1000;
     }
 }

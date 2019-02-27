@@ -1,6 +1,6 @@
 package xyz.andrasfindt.ai;
 
-import xyz.andrasfindt.ai.internal.Creep;
+import xyz.andrasfindt.ai.internal.BaseCreep;
 import xyz.andrasfindt.ai.internal.Population;
 
 public class Status {
@@ -18,7 +18,7 @@ public class Status {
     private double disanceFromGoal;
 
     public Status(Population population) {
-        Creep bestCreep = population.getPreviousGenerationBestCreep();
+        BaseCreep bestCreep = population.getPreviousGenerationBestCreep();
         disanceFromGoal = bestCreep.getPosition().distance(Game.Setup.goal);
         solved = bestCreep.hasReachedGoal();
         stepsTaken = bestCreep.getStepCount();

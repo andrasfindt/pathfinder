@@ -11,27 +11,39 @@ public class Population {
 
     private final int genomeSize;
     private Listener listener;
-    private Creep[] creeps;
+    private BaseCreep[] creeps;
     private double fitnessSum = 0d;
     private int gen = 1;
     private int bestCreep = 0;
     private int minStep;
-    private Creep oldBestCreep;
+    private BaseCreep oldBestCreep;
 
+    public Population(Listener listener, BaseCreep[] creeps) {
+        this.listener = listener;
+        this.creeps = creeps;
+        RandomUtil.setRandomSeed(Game.Setup.RANDOM_SEED);
+        if (creeps.length == 0) {
+            genomeSize = 0;
+        } else {
+            genomeSize = creeps[0].genomeSize;
+        }
+        this.minStep = genomeSize;
+    }
+/*
     public Population(int size, Listener listener, int genomeSize) {
         this.genomeSize = genomeSize;
         this.minStep = genomeSize;
         RandomUtil.setRandomSeed(Game.Setup.RANDOM_SEED);
         this.listener = listener;
-        creeps = new Creep[size];
+        creeps = new BaseCreep[size];
         for (int i = 0; i < size; i++) {
-//            creeps[i] = new Creep(ObstacleStrategy.BOUNCE);
-            creeps[i] = new Creep(this.genomeSize);
+//            creeps[i] = new BaseCreep(ObstacleStrategy.BOUNCE);
+            creeps[i] = new BasicCreep(this.genomeSize);
 //            if (gen == 1) {
 //                player.setStrategy();
 //            }
         }
-    }
+    }*/
 
     public int getGenomeSize() {
         return genomeSize;
@@ -42,12 +54,17 @@ public class Population {
     }
 
     public int getAliveCount() {
-        return (int) Arrays.stream(creeps).filter(s -> !s.isDead()).count();
+        long count = 0L;
+        for (BaseCreep s : creeps) {
+            if (!s.isDead()) {
+                count++;
+            }
+        }
+        return (int) count;
     }
 
     public void update() {
-        Arrays.stream(creeps).forEach(creep -> {
-            //note:
+        for (BaseCreep creep : creeps) {//note:
             // for second stage optimization. (if we disable this, we don't die early, and keep pathfinding until brain runs out)
             // while it will never improve on the fitness of the overall population, it ensures that if the goal changes,
             // the population can be made to automatically adjust and use any dormant genes since last found path solution
@@ -56,11 +73,11 @@ public class Population {
             } else {
                 creep.update();
             }
-        });
+        }
     }
 
     public void calculateFitness() {
-        for (Creep creep : creeps) {
+        for (BaseCreep creep : creeps) {
             creep.calculateFitness();
         }
     }
@@ -70,13 +87,13 @@ public class Population {
     }
 
     public void naturalSelection() {
-        Creep[] newCreeps = new Creep[creeps.length];//next gen
+        BaseCreep[] newCreeps = new BaseCreep[creeps.length];//next gen
         setBestCreep();
         calculateFitnessSum();
         newCreeps[0] = creeps[bestCreep].makeChild();
         newCreeps[0].setBest(true);
         for (int i = 1; i < newCreeps.length; i++) {
-            Creep parent = selectParent();
+            BaseCreep parent = selectParent();
             newCreeps[i] = parent.makeChild();
         }
         creeps = newCreeps.clone();
@@ -84,13 +101,13 @@ public class Population {
     }
 
     void calculateFitnessSum() {
-        this.fitnessSum = Arrays.stream(creeps).map(Creep::getFitness).reduce(0d, Double::sum);
+        this.fitnessSum = Arrays.stream(creeps).map(BaseCreep::getFitness).reduce(0d, Double::sum);
     }
 
-    private Creep selectParent() {
+    private BaseCreep selectParent() {
         double rand = RandomUtil.nextDouble(fitnessSum);
         double runningSum = 0d;
-        for (Creep creep : creeps) {
+        for (BaseCreep creep : creeps) {
             runningSum += creep.getFitness();
             if (runningSum > rand) {
                 return creep;
@@ -122,11 +139,11 @@ public class Population {
     }
 
 
-    public Creep getPreviousGenerationBestCreep() {
+    public BaseCreep getPreviousGenerationBestCreep() {
         return oldBestCreep;
     }
 
-    public Creep[] getCreeps() {
+    public BaseCreep[] getCreeps() {
         return creeps;
     }
 
