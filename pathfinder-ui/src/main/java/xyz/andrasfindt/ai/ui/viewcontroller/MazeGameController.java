@@ -65,7 +65,7 @@ public class MazeGameController implements Listener, DrawingListener {
     private boolean drawOldLocations = false;
     private boolean obstaclesNeedUpdating = true;
     private boolean goalsNeedUpdating = true;
-    private Color STATISTICS_BACKGROUND_COLOR = Color.color(0d, 0d, 0d, .5d);
+    private Color STATISTICS_BACKGROUND_COLOR = Color.color(0d, 0d, 0d, .3333d);
 
     public void initialize() {
         creepsGraphicsContext = gameCanvasCreeps.getGraphicsContext2D();
