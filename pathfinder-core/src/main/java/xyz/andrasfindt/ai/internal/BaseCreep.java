@@ -6,28 +6,28 @@ import xyz.andrasfindt.ai.geom.Vector2D;
 import xyz.andrasfindt.ai.obstacle.Obstacle;
 import xyz.andrasfindt.ai.obstacle.ObstacleStrategy;
 
-public class Creep {
+public abstract class BaseCreep {
     private Vector2D position = new Vector2D(Game.Setup.SCREEN_WIDTH / 2d, Game.Setup.SCREEN_HEIGHT - 10d);
     private Vector2D velocity = Vector2D.ZERO;
     private Vector2D acceleration = Vector2D.ZERO;
 
     private Genome genome;
 
-    private boolean dead = false;
+    protected boolean dead = false;
     private boolean reachedGoal = false;
     private boolean best = false;
 
     private double fitness = 0d;
 
     private ObstacleStrategy strategy = ObstacleStrategy.DIE_ON_HIT;
-    private int genomeSize;
+    protected int genomeSize;
 
-    Creep(int genomeSize) {
+    protected BaseCreep(int genomeSize) {
         this.genomeSize = genomeSize;
         genome = new Genome(genomeSize);
     }
 
-    Creep(int genomeSize, ObstacleStrategy strategy) {
+    protected BaseCreep(int genomeSize, ObstacleStrategy strategy) {
         this(genomeSize);
         this.strategy = strategy;
     }
@@ -106,11 +106,14 @@ public class Creep {
         for (Obstacle obstacle : Game.getObstacles()) {
             hit = obstacle.hit(position);
             if (hit) {
+                takeHit(obstacle);
                 break;
             }
         }
         return hit;
     }
+
+    protected abstract void takeHit(Obstacle obstacle);
 
     //fixme
     // create new fitness function.
@@ -123,12 +126,14 @@ public class Creep {
         }
     }
 
-    Creep makeChild() {
-        Creep child = new Creep(genomeSize);
+    BaseCreep makeChild() {
+        BaseCreep child = makeNew();
         child.genome = genome.copy();
         child.strategy = strategy;
         return child;
     }
+
+    protected abstract BaseCreep makeNew();
 
     public boolean hasReachedGoal() {
         return reachedGoal;

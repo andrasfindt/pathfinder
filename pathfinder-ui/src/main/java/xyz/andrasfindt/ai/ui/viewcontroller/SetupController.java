@@ -38,7 +38,7 @@ public class SetupController {
         Game.Setup.MUTATION_RATE = Double.valueOf(mutationRate.getText());
         Game.Setup.RANDOM_SEED = Long.valueOf(randomSeed.getText());
         Game.Setup.TRUNCATE_POPULATION = optimizeSteps.isSelected();
-        Game.Setup.DEFAULT_GENOME_SIZE = Integer.valueOf(genomeSize.getText());
+        Game.Setup.GENOME_SIZE = Integer.valueOf(genomeSize.getText());
         SceneController.setScene("editMaze");
     }
 
@@ -48,7 +48,7 @@ public class SetupController {
         mutationRate.setText(String.valueOf(Game.Setup.MUTATION_RATE));
         randomSeed.setText(String.valueOf(Game.Setup.RANDOM_SEED));
         optimizeSteps.setSelected(Game.Setup.TRUNCATE_POPULATION);
-        genomeSize.setText(String.valueOf(Game.Setup.DEFAULT_GENOME_SIZE));
+        genomeSize.setText(String.valueOf(Game.Setup.GENOME_SIZE));
 
         new PositiveIntegerTextFieldValidator(populationSize);
         new PositiveIntegerTextFieldValidator(width);

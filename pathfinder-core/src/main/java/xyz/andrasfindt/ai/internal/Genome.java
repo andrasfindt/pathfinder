@@ -3,12 +3,12 @@ package xyz.andrasfindt.ai.internal;
 import xyz.andrasfindt.ai.Game;
 import xyz.andrasfindt.ai.geom.Vector2D;
 
-import java.util.Arrays;
-import java.util.stream.IntStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import static java.lang.Math.PI;
 
-class Genome {
+public class Genome {
     private static final double PI_2 = PI * 2d;
     Vector2D[] genes;
     int step;
@@ -28,11 +28,19 @@ class Genome {
     }
 
     private Vector2D[] copyDirections(Vector2D[] directions) {
-        return Arrays.stream(directions).map(Vector2D::copy).toArray(Vector2D[]::new);
+        List<Vector2D> list = new ArrayList<>();
+        for (Vector2D direction : directions) {
+            Vector2D copy = direction.copy();
+            list.add(copy);
+        }
+        return list.toArray(new Vector2D[0]);
     }
 
     private void randomize() {
-        IntStream.range(0, genomeSize).forEach(this::assignRandomDirection);
+        int bound = genomeSize;
+        for (int i = 0; i < bound; i++) {
+            assignRandomDirection(i);
+        }
     }
 
     Genome copy() {
@@ -40,7 +48,12 @@ class Genome {
     }
 
     void mutate() {
-        IntStream.range(0, genes.length).filter(i -> RandomUtil.nextDouble() < Game.Setup.MUTATION_RATE).forEach(this::assignRandomDirection);
+        int bound = genes.length;
+        for (int i = 0; i < bound; i++) {
+            if (RandomUtil.nextDouble() < Game.Setup.MUTATION_RATE) {
+                assignRandomDirection(i);
+            }
+        }
     }
 
     private void assignRandomDirection(int i) {
