@@ -27,7 +27,7 @@ public abstract class DestroyableObstacle extends PlayerImageObstacle implements
         }
         boolean hit = super.hit(position);
         if (hit) {
-            if (health-- <= 0) {
+            if (--health <= 0) {
                 dead = true;
             }
         }

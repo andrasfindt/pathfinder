@@ -17,6 +17,8 @@ import xyz.andrasfindt.ai.DotGame;
 import xyz.andrasfindt.ai.Game;
 import xyz.andrasfindt.ai.Listener;
 import xyz.andrasfindt.ai.Status;
+import xyz.andrasfindt.ai.creep.BaseCreep;
+import xyz.andrasfindt.ai.creep.Boss;
 import xyz.andrasfindt.ai.geom.Rectangle2D;
 import xyz.andrasfindt.ai.geom.Vector2D;
 import xyz.andrasfindt.ai.obstacle.BackgroundImageObstacle;
@@ -33,10 +35,13 @@ import java.util.List;
 import java.util.OptionalDouble;
 
 public class MazeGameController implements Listener, DrawingListener {
+    public static final Color BEST_CREEP_COLOR = Color.BLUE;
+    public static final Color BOSS_CREEP_COLOR = Color.FUCHSIA;
     private static final Color DEFAULT_TEXT_COLOR = Color.LIGHTCYAN;
     private static final Color DEFAULT_BACKGROUND_COLOR = Color.BLACK;
     private static final double GREEN_HUE = Color.GREEN.getHue();
     private static final double GREEN_HUE_SCALING_FACTOR = GREEN_HUE / (Game.Setup.SCREEN_HEIGHT - Game.Setup.goal.y / 2d - 1d);
+    private static final double GREEN_HUE_SCALING_FACTOR_B = GREEN_HUE / (Game.Setup.goal.distance(Game.Setup.screenSize));
     private static final Color OBSTACLE_COLOR = Color.SADDLEBROWN;
     private static final String LOG_MESSAGE_FORMAT = "%s %s gen: %d max: %s step(t/m): %d/%d max_speed: %s creeps(a/p): %d/%d m-rate: %s r-seed: %d d-goal: %s";
     private static final Color DEFAULT_COLOR = Color.hsb(0d, 1d, 1d);//Color.BLUEVIOLET;
@@ -176,6 +181,29 @@ public class MazeGameController implements Listener, DrawingListener {
         creepsGraphicsContext.fillOval(position.x - 2d, position.y - 2d, 3d, 3d);
     }
 
+    @Override
+    public void draw(BaseCreep creep) {
+        if (creep instanceof Boss) {
+            currentColor = BOSS_CREEP_COLOR;
+            creepsGraphicsContext.setFill(currentColor);
+            creepsGraphicsContext.fillOval(creep.getPosition().x - 2d, creep.getPosition().y - 2d, 5d, 5d);
+            return;
+        } else if (creep.isBest()) {
+            currentColor = BEST_CREEP_COLOR;
+        } /*else if (currentColor != DEFAULT_COLOR) {
+            currentColor = DEFAULT_COLOR;
+            creepsGraphicsContext.setStroke(currentColor);
+            creepsGraphicsContext.setFill(currentColor);
+        } */ else {
+            double hue = getHue(creep.getPosition());
+            double saturation = 1d;
+            currentColor = Color.hsb(hue, saturation, 1.0);
+        }
+        creepsGraphicsContext.setFill(currentColor);
+        creepsGraphicsContext.fillOval(creep.getPosition().x - 1d, creep.getPosition().y - 1d, 3d, 3d);
+
+    }
+
     private double getHue(Vector2D position) {
         //fixme
         // this calculates the color based on the current location.
@@ -187,7 +215,7 @@ public class MazeGameController implements Listener, DrawingListener {
         // the population.
         //  --- currently this is only based on the vertical distance to the goal.
 
-        return GREEN_HUE - position.y * GREEN_HUE_SCALING_FACTOR;
+        return GREEN_HUE - position.distance(Game.Setup.goal) * GREEN_HUE_SCALING_FACTOR;
     }
 
     @Override

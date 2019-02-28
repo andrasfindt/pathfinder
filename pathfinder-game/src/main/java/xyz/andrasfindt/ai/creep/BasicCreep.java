@@ -1,14 +1,26 @@
 package xyz.andrasfindt.ai.creep;
 
-import xyz.andrasfindt.ai.internal.BaseCreep;
+import xyz.andrasfindt.ai.Upgradable;
 import xyz.andrasfindt.ai.obstacle.Obstacle;
 
-public class BasicCreep extends DestroyableCreep {
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+
+public class BasicCreep extends DestroyableCreep implements Upgradable {
 
     private static final int DEFAULT_HEALTH = 1;
 
     public BasicCreep(int genomeSize) {
         super(genomeSize, DEFAULT_HEALTH);
+    }
+
+    protected BasicCreep(Genome genome) {
+        super(genome.genomeSize, DEFAULT_HEALTH);
+        this.genome = genome.copy();
+    }
+
+    protected BasicCreep(int genomeSize, int health) {
+        super(genomeSize, health);
     }
 
     @Override
@@ -18,9 +30,21 @@ public class BasicCreep extends DestroyableCreep {
 
     @Override
     protected void takeHit(Obstacle obstacle) {
-        if (health-- <= 0) {
+        if (--health <= 0) {
             dead = true;
         }
+    }
 
+    @Override
+    public BaseCreep makeChild() {
+        return super.makeChild();
+    }
+
+    @Override
+    public <T extends BaseCreep> T upgrade(Class<T> clazz) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+        Constructor<T> constructor = clazz.getDeclaredConstructor(Genome.class);
+        T creep = constructor.newInstance(genome);
+        creep.setBest(true);
+        return creep;
     }
 }

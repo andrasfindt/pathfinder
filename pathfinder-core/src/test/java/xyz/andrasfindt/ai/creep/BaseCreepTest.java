@@ -1,8 +1,9 @@
-package xyz.andrasfindt.ai.internal;
+package xyz.andrasfindt.ai.creep;
 
 import org.junit.Before;
 import org.junit.Test;
 import xyz.andrasfindt.ai.Game;
+import xyz.andrasfindt.ai.RandomUtil;
 import xyz.andrasfindt.ai.geom.Vector2D;
 import xyz.andrasfindt.ai.obstacle.RectangleObstacle;
 

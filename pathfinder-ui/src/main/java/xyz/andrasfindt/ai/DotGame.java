@@ -1,8 +1,9 @@
 package xyz.andrasfindt.ai;
 
+import xyz.andrasfindt.ai.creep.BaseCreep;
 import xyz.andrasfindt.ai.creep.BasicCreep;
-import xyz.andrasfindt.ai.internal.BaseCreep;
-import xyz.andrasfindt.ai.internal.Population;
+import xyz.andrasfindt.ai.population.GamePopulation;
+import xyz.andrasfindt.ai.population.Population;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,7 +15,7 @@ public class DotGame {
 
     public DotGame(Listener listener) {
         BaseCreep[] creeps = IntStream.range(0, Game.Setup.POPULATION_SIZE).mapToObj(i -> new BasicCreep(Game.Setup.GENOME_SIZE)).toArray(BaseCreep[]::new);
-        this.activePopulations.put(DEFAULT_POPULATION, new Population(listener, creeps));
+        this.activePopulations.put(DEFAULT_POPULATION, new GamePopulation(listener, creeps));
     }
 
     public void churn() {

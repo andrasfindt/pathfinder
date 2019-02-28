@@ -1,4 +1,4 @@
-package xyz.andrasfindt.ai.internal;
+package xyz.andrasfindt.ai.creep;
 
 import xyz.andrasfindt.ai.Game;
 import xyz.andrasfindt.ai.Listener;
@@ -6,21 +6,19 @@ import xyz.andrasfindt.ai.geom.Vector2D;
 import xyz.andrasfindt.ai.obstacle.Obstacle;
 import xyz.andrasfindt.ai.obstacle.ObstacleStrategy;
 
-public abstract class BaseCreep {
-    private Vector2D position = new Vector2D(Game.Setup.SCREEN_WIDTH / 2d, Game.Setup.SCREEN_HEIGHT - 10d);
-    private Vector2D velocity = Vector2D.ZERO;
-    private Vector2D acceleration = Vector2D.ZERO;
+import java.io.Serializable;
 
-    private Genome genome;
-
+public abstract class BaseCreep implements Serializable {
+    public int genomeSize;
+    protected Genome genome;
     protected boolean dead = false;
-    private boolean reachedGoal = false;
+    protected Vector2D position = new Vector2D(Game.Setup.SCREEN_WIDTH / 2d, Game.Setup.SCREEN_HEIGHT - 10d);
+    protected Vector2D velocity = Vector2D.ZERO;
+    private Vector2D acceleration = Vector2D.ZERO;
+    protected boolean reachedGoal = false;
     private boolean best = false;
-
     private double fitness = 0d;
-
-    private ObstacleStrategy strategy = ObstacleStrategy.DIE_ON_HIT;
-    protected int genomeSize;
+    protected ObstacleStrategy strategy = ObstacleStrategy.DIE_ON_HIT;
 
     protected BaseCreep(int genomeSize) {
         this.genomeSize = genomeSize;
@@ -41,8 +39,10 @@ public abstract class BaseCreep {
     }
 
     public void draw(Listener listener) {
-        listener.draw(position, best);
+//        listener.draw(position, best);
+        listener.draw(this);
     }
+
 
     void move() {
         if (genome.genomeSize > genome.step) {
@@ -57,7 +57,7 @@ public abstract class BaseCreep {
 
     }
 
-    void update() {
+    public void update() {
         if (!dead && !reachedGoal) {
             move();
             if (position.distance(Game.Setup.goal) < 5d) {//if reached goal
@@ -94,7 +94,7 @@ public abstract class BaseCreep {
         }
     }
 
-    private boolean isOutOfBounds() {
+    protected boolean isOutOfBounds() {
         return position.x < 0 ||
                 position.x > Game.Setup.screenSize.x ||
                 position.y < 0 ||
@@ -106,19 +106,17 @@ public abstract class BaseCreep {
         for (Obstacle obstacle : Game.getObstacles()) {
             hit = obstacle.hit(position);
             if (hit) {
-                takeHit(obstacle);
+//                takeHit(obstacle);
                 break;
             }
         }
         return hit;
     }
 
-    protected abstract void takeHit(Obstacle obstacle);
-
     //fixme
     // create new fitness function.
-    void calculateFitness() {
-        if (reachedGoal) {
+    public void calculateFitness() {
+        if (reachedGoal) {      //10000d originally. not sure what difference it makes. Really need to try give a shit about the number
             fitness = 1d / 16d + 8192d / (genome.step * genome.step);
         } else {
             double d = position.distance(Game.Setup.goal);
@@ -126,9 +124,13 @@ public abstract class BaseCreep {
         }
     }
 
-    BaseCreep makeChild() {
+    public BaseCreep makeChild() {
         BaseCreep child = makeNew();
-        child.genome = genome.copy();
+        try {
+            child.genome = genome.copy();
+        } catch (NullPointerException npe) {
+            npe.printStackTrace();
+        }
         child.strategy = strategy;
         return child;
     }
