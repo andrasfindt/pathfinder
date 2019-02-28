@@ -1,8 +1,10 @@
-package xyz.andrasfindt.ai.internal;
+package xyz.andrasfindt.ai.population;
 
 import xyz.andrasfindt.ai.Game;
 import xyz.andrasfindt.ai.Listener;
+import xyz.andrasfindt.ai.RandomUtil;
 import xyz.andrasfindt.ai.Status;
+import xyz.andrasfindt.ai.creep.BaseCreep;
 
 import java.util.Arrays;
 import java.util.stream.IntStream;
@@ -10,11 +12,11 @@ import java.util.stream.IntStream;
 public class Population {
 
     private final int genomeSize;
+    protected BaseCreep[] creeps;
+    protected int gen = 1;
+    protected int bestCreep = 0;
     private Listener listener;
-    private BaseCreep[] creeps;
     private double fitnessSum = 0d;
-    private int gen = 1;
-    private int bestCreep = 0;
     private int minStep;
     private BaseCreep oldBestCreep;
 
@@ -29,21 +31,6 @@ public class Population {
         }
         this.minStep = genomeSize;
     }
-/*
-    public Population(int size, Listener listener, int genomeSize) {
-        this.genomeSize = genomeSize;
-        this.minStep = genomeSize;
-        RandomUtil.setRandomSeed(Game.Setup.RANDOM_SEED);
-        this.listener = listener;
-        creeps = new BaseCreep[size];
-        for (int i = 0; i < size; i++) {
-//            creeps[i] = new BaseCreep(ObstacleStrategy.BOUNCE);
-            creeps[i] = new BasicCreep(this.genomeSize);
-//            if (gen == 1) {
-//                player.setStrategy();
-//            }
-        }
-    }*/
 
     public int getGenomeSize() {
         return genomeSize;
@@ -100,11 +87,11 @@ public class Population {
         gen++;
     }
 
-    void calculateFitnessSum() {
+    protected void calculateFitnessSum() {
         this.fitnessSum = Arrays.stream(creeps).map(BaseCreep::getFitness).reduce(0d, Double::sum);
     }
 
-    private BaseCreep selectParent() {
+    protected BaseCreep selectParent() {
         double rand = RandomUtil.nextDouble(fitnessSum);
         double runningSum = 0d;
         for (BaseCreep creep : creeps) {
@@ -121,7 +108,7 @@ public class Population {
         IntStream.range(1, creeps.length).forEach(i -> creeps[i].getGenome().mutate());
     }
 
-    private void setBestCreep() {
+    protected void setBestCreep() {
         double max = 0d;
         int maxIndex = 0;
         for (int i = 0; i < creeps.length; i++) {

@@ -1,7 +1,7 @@
 package xyz.andrasfindt.ai;
 
-import xyz.andrasfindt.ai.internal.BaseCreep;
-import xyz.andrasfindt.ai.internal.Population;
+import xyz.andrasfindt.ai.creep.BaseCreep;
+import xyz.andrasfindt.ai.population.Population;
 
 public class Status {
     private boolean solved;

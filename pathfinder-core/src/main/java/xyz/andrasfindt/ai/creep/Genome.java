@@ -1,6 +1,7 @@
-package xyz.andrasfindt.ai.internal;
+package xyz.andrasfindt.ai.creep;
 
 import xyz.andrasfindt.ai.Game;
+import xyz.andrasfindt.ai.RandomUtil;
 import xyz.andrasfindt.ai.geom.Vector2D;
 
 import java.util.ArrayList;
@@ -10,8 +11,8 @@ import static java.lang.Math.PI;
 
 public class Genome {
     private static final double PI_2 = PI * 2d;
+    public int step;
     Vector2D[] genes;
-    int step;
     int genomeSize;
 
     Genome(int genomeSize) {
@@ -47,9 +48,20 @@ public class Genome {
         return new Genome(genes);
     }
 
-    void mutate() {
-        int bound = genes.length;
-        for (int i = 0; i < bound; i++) {
+    public void mutate() {
+        mutate(0, genes.length);
+    }
+
+    public void mutate(int offset) {
+        mutate(offset, genes.length - offset);
+    }
+
+    private void mutate(int offset, int size) {
+        int bound = offset + size;
+        if (bound > genes.length) {
+            bound = genes.length;
+        }
+        for (int i = offset; i < bound; i++) {
             if (RandomUtil.nextDouble() < Game.Setup.MUTATION_RATE) {
                 assignRandomDirection(i);
             }
