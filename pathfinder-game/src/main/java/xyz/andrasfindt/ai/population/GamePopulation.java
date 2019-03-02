@@ -14,25 +14,25 @@ public class GamePopulation extends Population {
 
     @Override
     public void naturalSelection() {
-
-
         gen++;
         BaseCreep[] newCreeps = new BaseCreep[creeps.length];//next gen
         setBestCreep();
         calculateFitnessSum();
 
         BaseCreep creep = creeps[bestCreep];
-        if (gen % 10 == 0 && creep instanceof Upgradable) {
+        if (false) {//gen % 10 == 0 && creep instanceof Upgradable) {
             try {
                 newCreeps[0] = ((Upgradable) creep).upgrade(BossCreep.class);
+                newCreeps[0].setBest(false);
             } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException e) {
                 e.printStackTrace();
                 newCreeps[0] = creep.makeChild();
+                newCreeps[0].setBest(true);
             }
         } else {
             newCreeps[0] = creep.makeChild();
+            newCreeps[0].setBest(true);
         }
-        newCreeps[0].setBest(true);
         for (int i = 1; i < newCreeps.length; i++) {
             BaseCreep parent = selectParent();
             newCreeps[i] = parent.makeChild();

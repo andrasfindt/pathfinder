@@ -43,7 +43,7 @@ public class Population {
     public int getAliveCount() {
         long count = 0L;
         for (BaseCreep s : creeps) {
-            if (!s.isDead()) {
+            if (!s.isDead() && !s.hasReachedGoal()) {
                 count++;
             }
         }

@@ -5,7 +5,6 @@ import xyz.andrasfindt.ai.Listener;
 import xyz.andrasfindt.ai.Status;
 import xyz.andrasfindt.ai.creep.BaseCreep;
 import xyz.andrasfindt.ai.creep.TestCreep;
-import xyz.andrasfindt.ai.geom.Vector2D;
 
 import java.util.Arrays;
 
@@ -20,14 +19,10 @@ public class PopulationTest {
         creeps[1] = new TestCreep(100);
 
         Population population = new Population(new Listener() {
-            @Override
-            public void draw(Vector2D position, boolean isBest) {
-                System.out.printf("drawing %s as %s\n", position, isBest ? "best" : "normal dot");
-            }
 
             @Override
-            public void draw(BaseCreep creep) {
-
+            public void draw(BaseCreep.ViewModel creep) {
+                System.out.printf("drawing %s as %s\n", creep.getPosition(), creep.isBest() ? "best" : "normal dot");
             }
 
             @Override

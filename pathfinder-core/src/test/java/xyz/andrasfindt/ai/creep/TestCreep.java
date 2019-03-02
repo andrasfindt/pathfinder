@@ -6,6 +6,16 @@ public class TestCreep extends BaseCreep {
     }
 
     @Override
+    protected ViewModel makeViewModel() {
+        return null;
+    }
+
+    @Override
+    protected double getSpeedLimit() {
+        return 5;
+    }
+
+    @Override
     protected BaseCreep makeNew() {
         return new TestCreep(genomeSize);
     }

@@ -72,14 +72,14 @@ public class Game {
         public static final int SCREEN_WIDTH = 512;
         public static final int SCREEN_HEIGHT = 512;
         public final static Vector2D screenSize = new Vector2D((double) SCREEN_WIDTH, (double) SCREEN_HEIGHT);
-        private static final double GOAL_X = SCREEN_WIDTH / 2d;
-        private static final double GOAL_Y = 10d;
+        private static final double GOAL_X = SCREEN_WIDTH / 2d + 30;
+        private static final double GOAL_Y = 10d;//SCREEN_HEIGHT / 2d + 15;
         public static final Vector2D goal = new Vector2D(GOAL_X, GOAL_Y);
         public static long RANDOM_SEED = System.currentTimeMillis();
         public static int POPULATION_SIZE = 1000;
         public static double MUTATION_RATE = 0.01d;
         public static double SPEED_LIMIT = 5d;
-        public static boolean TRUNCATE_POPULATION = true;
+        public static boolean TRUNCATE_POPULATION = false;
         public static int GENOME_SIZE = 1000;
     }
 }

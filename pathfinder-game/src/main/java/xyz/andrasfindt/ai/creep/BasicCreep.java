@@ -14,6 +14,11 @@ public class BasicCreep extends DestroyableCreep implements Upgradable {
         super(genomeSize, DEFAULT_HEALTH);
     }
 
+    @Override
+    protected BaseCreep.ViewModel makeViewModel() {
+        return new ViewModel(this);
+    }
+
     protected BasicCreep(Genome genome) {
         super(genome.genomeSize, DEFAULT_HEALTH);
         this.genome = genome.copy();
@@ -44,7 +49,12 @@ public class BasicCreep extends DestroyableCreep implements Upgradable {
     public <T extends BaseCreep> T upgrade(Class<T> clazz) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
         Constructor<T> constructor = clazz.getDeclaredConstructor(Genome.class);
         T creep = constructor.newInstance(genome);
-        creep.setBest(true);
         return creep;
+    }
+
+    protected class ViewModel extends DestroyableCreep.ViewModel<BasicCreep> {
+        ViewModel(BasicCreep creep) {
+            super(creep);
+        }
     }
 }

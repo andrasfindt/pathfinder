@@ -11,6 +11,7 @@ import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import xyz.andrasfindt.ai.Destroyable;
 import xyz.andrasfindt.ai.DotGame;
@@ -18,12 +19,13 @@ import xyz.andrasfindt.ai.Game;
 import xyz.andrasfindt.ai.Listener;
 import xyz.andrasfindt.ai.Status;
 import xyz.andrasfindt.ai.creep.BaseCreep;
-import xyz.andrasfindt.ai.creep.Boss;
+import xyz.andrasfindt.ai.creep.BossCreep;
 import xyz.andrasfindt.ai.geom.Rectangle2D;
 import xyz.andrasfindt.ai.geom.Vector2D;
 import xyz.andrasfindt.ai.obstacle.BackgroundImageObstacle;
 import xyz.andrasfindt.ai.obstacle.BarrierObstacle;
 import xyz.andrasfindt.ai.obstacle.PlayerImageObstacle;
+import xyz.andrasfindt.ai.ui.creep.CreepDot;
 import xyz.andrasfindt.ai.ui.drawing.DrawingEvent;
 import xyz.andrasfindt.ai.ui.drawing.DrawingHandler;
 import xyz.andrasfindt.ai.ui.drawing.DrawingListener;
@@ -31,70 +33,65 @@ import xyz.andrasfindt.ai.ui.drawing.DrawingViewWrapper;
 import xyz.andrasfindt.ai.ui.drawing.ImageUtil;
 
 import java.text.DecimalFormat;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.OptionalDouble;
+import java.util.UUID;
 
 public class MazeGameController implements Listener, DrawingListener {
-    public static final Color BEST_CREEP_COLOR = Color.BLUE;
-    public static final Color BOSS_CREEP_COLOR = Color.FUCHSIA;
+    private static final double FUCHSIA_HUE = Color.FUCHSIA.getHue();
+    private static final double BLUE_HUE = Color.BLUE.getHue();
     private static final Color DEFAULT_TEXT_COLOR = Color.LIGHTCYAN;
     private static final Color DEFAULT_BACKGROUND_COLOR = Color.BLACK;
-    private static final double GREEN_HUE = Color.GREEN.getHue();
-    private static final double GREEN_HUE_SCALING_FACTOR = GREEN_HUE / (Game.Setup.SCREEN_HEIGHT - Game.Setup.goal.y / 2d - 1d);
-    private static final double GREEN_HUE_SCALING_FACTOR_B = GREEN_HUE / (Game.Setup.goal.distance(Game.Setup.screenSize));
     private static final Color OBSTACLE_COLOR = Color.SADDLEBROWN;
     private static final String LOG_MESSAGE_FORMAT = "%s %s gen: %d max: %s step(t/m): %d/%d max_speed: %s creeps(a/p): %d/%d m-rate: %s r-seed: %d d-goal: %s";
     private static final Color DEFAULT_COLOR = Color.hsb(0d, 1d, 1d);//Color.BLUEVIOLET;
+    private DecimalFormat df = new DecimalFormat("#.##########");
     @FXML
-    public Label popSize;
+    private Label popSize;
     @FXML
-    public Canvas gameCanvasGoals;
+    private Canvas gameCanvasGoals;
     @FXML
-    public Canvas gameCanvasObstacles;
+    private Canvas gameCanvasObstacles;
     @FXML
-    public Canvas gameCanvasStatistics;
-    DecimalFormat df = new DecimalFormat("#.##########");
+    private Canvas gameCanvasStatistics;
     @FXML
-    private Canvas gameCanvasCreeps;
+    private Pane gameCanvasCreeps;
     @FXML
     private Canvas gameCanvasBackground;
+    private Map<UUID, CreepDot> creepDots = new HashMap<>();
 
-    private GraphicsContext creepsGraphicsContext;
     private GraphicsContext goalsGraphicsContext;
     private GraphicsContext obstaclesGraphicsContext;
     private GraphicsContext backgroundGraphicsContext;
     private GraphicsContext statisticsGraphicsContext;
     private double canvasWidth;
     private double canvasHeight;
-    private Color currentColor = Color.BLACK;
     private AnimationTimer animator;
     private DotGame dotGame;
     private boolean drawOldLocations = false;
     private boolean obstaclesNeedUpdating = true;
     private boolean goalsNeedUpdating = true;
     private int obstacleLiveCount = 0;
-    private Color STATISTICS_BACKGROUND_COLOR = Color.color(0d, 0d, 0d, .3333d);
+    private Color STATISTICS_BACKGROUND_COLOR = Color.color(0d, 0d, 0d, .25d);
+    private Status status;
 
     public void initialize() {
-        creepsGraphicsContext = gameCanvasCreeps.getGraphicsContext2D();
         backgroundGraphicsContext = gameCanvasBackground.getGraphicsContext2D();
         goalsGraphicsContext = gameCanvasGoals.getGraphicsContext2D();
         obstaclesGraphicsContext = gameCanvasObstacles.getGraphicsContext2D();
         statisticsGraphicsContext = gameCanvasStatistics.getGraphicsContext2D();
-        canvasWidth = creepsGraphicsContext.getCanvas().getWidth();
-        canvasHeight = creepsGraphicsContext.getCanvas().getHeight();
+        canvasWidth = backgroundGraphicsContext.getCanvas().getWidth();
+        canvasHeight = backgroundGraphicsContext.getCanvas().getHeight();
         drawBackground();
         initDraw();
         popSize.setText(String.valueOf(Game.Setup.POPULATION_SIZE));
 
         dotGame = new DotGame(this);
-        creepsGraphicsContext.clearRect(0, 0, canvasWidth, canvasHeight);
         animator = new AnimationTimer() {
             @Override
             public void handle(long arg0) {
-                if (!drawOldLocations) {
-                    reset();
-                }
                 popSize.setText(String.valueOf(dotGame.getAliveCount(DotGame.DEFAULT_POPULATION)));
                 if (Game.getLiveObstacles().size() != obstacleLiveCount) {
                     obstaclesNeedUpdating = true;
@@ -162,64 +159,30 @@ public class MazeGameController implements Listener, DrawingListener {
     }
 
     @Override
-    public void draw(Vector2D position, boolean isBest) {
-        if (isBest) {
-            currentColor = Color.BLUE;
-            creepsGraphicsContext.setStroke(currentColor);
-            creepsGraphicsContext.setFill(currentColor);
-        } /*else if (currentColor != DEFAULT_COLOR) {
-            currentColor = DEFAULT_COLOR;
-            creepsGraphicsContext.setStroke(currentColor);
-            creepsGraphicsContext.setFill(currentColor);
-        } */ else {
-            double hue = getHue(position);
-            double saturation = 1d;
-            currentColor = Color.hsb(hue, saturation, 1.0);
-            creepsGraphicsContext.setStroke(currentColor);
-            creepsGraphicsContext.setFill(currentColor);
-        }
-        creepsGraphicsContext.fillOval(position.x - 2d, position.y - 2d, 3d, 3d);
-    }
-
-    @Override
-    public void draw(BaseCreep creep) {
-        if (creep instanceof Boss) {
-            currentColor = BOSS_CREEP_COLOR;
-            creepsGraphicsContext.setFill(currentColor);
-            creepsGraphicsContext.fillOval(creep.getPosition().x - 2d, creep.getPosition().y - 2d, 5d, 5d);
-            return;
+    public void draw(BaseCreep.ViewModel creep) {
+        CreepDot creepDot = creepDots.get(creep.getId());
+        BaseCreep.ViewModel.Paint paint = creep.getPaint();
+        double radius = creep.getRadius();
+        Vector2D position = creep.getPosition();
+        if (creep instanceof BossCreep.ViewModel) {
+            paint = new BaseCreep.ViewModel.Paint(FUCHSIA_HUE, 1.0d, 1.0d);
         } else if (creep.isBest()) {
-            currentColor = BEST_CREEP_COLOR;
-        } /*else if (currentColor != DEFAULT_COLOR) {
-            currentColor = DEFAULT_COLOR;
-            creepsGraphicsContext.setStroke(currentColor);
-            creepsGraphicsContext.setFill(currentColor);
-        } */ else {
-            double hue = getHue(creep.getPosition());
-            double saturation = 1d;
-            currentColor = Color.hsb(hue, saturation, 1.0);
+            radius = 3.d;
+            paint = new BaseCreep.ViewModel.Paint(BLUE_HUE, 1.0d, 1.0d);
         }
-        creepsGraphicsContext.setFill(currentColor);
-        creepsGraphicsContext.fillOval(creep.getPosition().x - 1d, creep.getPosition().y - 1d, 3d, 3d);
+        if (creepDot == null) {
+            creepDot = new CreepDot(radius, position, paint);
+            creepDots.put(creep.getId(), creepDot);
+            gameCanvasCreeps.getChildren().add(creepDot);
+        } else {
+            creepDot.update(position, paint);
+        }
 
-    }
-
-    private double getHue(Vector2D position) {
-        //fixme
-        // this calculates the color based on the current location.
-        // Perhaps we can have each dot base its color on some feature of its genome (a hash of sorts of the first gene?
-        //  --- not currently available)
-
-        //todo
-        // in future the plan for this should be to calculate the value based on the distance to the current goal for
-        // the population.
-        //  --- currently this is only based on the vertical distance to the goal.
-
-        return GREEN_HUE - position.distance(Game.Setup.goal) * GREEN_HUE_SCALING_FACTOR;
     }
 
     @Override
     public void updateStats(Status status) {
+        this.status = status;
         boolean solved = status.isSolved();
         int stepsTaken = status.getStepsTaken();
         long stepsMax = status.getStepsMax();
@@ -256,11 +219,8 @@ public class MazeGameController implements Listener, DrawingListener {
 
     @Override
     public void reset() {
-        creepsGraphicsContext.clearRect(0, 0, canvasWidth, canvasHeight);
-        creepsGraphicsContext.setLineWidth(1);
-        currentColor = DEFAULT_COLOR;
-        creepsGraphicsContext.setStroke(currentColor);
-        creepsGraphicsContext.setFill(currentColor);
+        creepDots.clear();
+        gameCanvasCreeps.getChildren().clear();
     }
 
     @FXML

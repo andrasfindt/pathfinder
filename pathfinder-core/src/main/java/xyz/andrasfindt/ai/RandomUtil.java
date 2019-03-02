@@ -1,6 +1,7 @@
 package xyz.andrasfindt.ai;
 
 import java.util.Random;
+import java.util.UUID;
 
 public class RandomUtil {
     private static Random RANDOM = new Random(System.currentTimeMillis());
@@ -19,5 +20,9 @@ public class RandomUtil {
 
     public static double nextDouble() {
         return RANDOM.nextDouble();
+    }
+
+    public static UUID nextUUID() {
+        return UUID.randomUUID();
     }
 }
